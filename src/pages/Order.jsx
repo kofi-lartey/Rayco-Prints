@@ -251,23 +251,24 @@ export default function Order() {
         }
 
         try {
-            const response = await fetch('/', {
+            // Try to use Netlify Function for form submission
+            const response = await fetch('/.netlify/functions/send-email', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Content-Type': 'application/json',
                 },
-                body: new URLSearchParams(formDataSubmit).toString()
+                body: JSON.stringify(orderData)
             })
 
             if (response.ok) {
                 setSubmitStatus('success')
                 navigate('/success')
             } else {
-                throw new Error('Netlify submission failed')
+                throw new Error('Netlify function failed')
             }
         } catch (netlifyError) {
             // Fallback: Save to localStorage for local development
-            console.log('Netlify submission failed, using local fallback:', netlifyError)
+            console.log('Netlify function failed, using local fallback:', netlifyError)
 
             // Get existing orders from localStorage
             const existingOrders = JSON.parse(localStorage.getItem('rayco_orders') || '[]')
@@ -314,7 +315,7 @@ export default function Order() {
                 {/* Netlify Forms hidden input */}
                 <input type="hidden" name="form-name" value="orders" />
 
-                <form onSubmit={handleSubmit} className="bg-white shadow-lg rounded-lg p-8 space-y-6">
+                <form onSubmit={handleSubmit} data-netlify="true" className="bg-white shadow-lg rounded-lg p-8 space-y-6">
                     {/* Selected Service Display */}
                     {formData.service && (
                         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
