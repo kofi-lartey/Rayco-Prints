@@ -5,6 +5,7 @@ import Services from './pages/Services'
 import Portfolio from './pages/Portfolio'
 import Order from './pages/Order'
 import Contact from './pages/Contact'
+import Success from './pages/Success'
 
 /**
  * Main App Component
@@ -21,6 +22,7 @@ function App() {
             <Route path="/services" element={<Services />} />
             <Route path="/portfolio" element={<Portfolio />} />
             <Route path="/order" element={<Order />} />
+            <Route path="/success" element={<Success />} />
             <Route path="/contact" element={<Contact />} />
           </Routes>
         </main>

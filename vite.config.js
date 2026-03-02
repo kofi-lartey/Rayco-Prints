@@ -9,8 +9,4 @@ export default defineConfig({
     assetsDir: 'assets',
     sourcemap: false,
   },
-  server: {
-    host: true,
-    port: 5173
-  }
 })
