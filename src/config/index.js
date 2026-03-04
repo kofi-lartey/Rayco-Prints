@@ -61,7 +61,7 @@ export const CONFIG = {
     // EmailJS Configuration (to be filled by user)
     emailjs: {
         serviceId: 'service_oasu1vi',
-        templateId: 'template_qgao75r',
+        templateId: 'template_e213g57',
         publicKey: 'u0OLWTdAlEJucAxcQ'
     }
 }
