@@ -250,7 +250,7 @@ const Contact = () => {
                                     scrolling="no"
                                     marginHeight="0"
                                     marginWidth="0"
-                                    src={`https://maps.google.com/maps?q=${contact.location?.lat || 5.708327641251287},${contact.location?.lng || 0.11070570742514928}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
+                                    src={`https://maps.google.com/maps?q=${encodeURIComponent(contact.location?.address || 'Prampram Ghana')}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
                                     className="grayscale-[20%] contrast-[1.1] hover:grayscale-0 transition-all duration-500"
                                 ></iframe>
                             </div>

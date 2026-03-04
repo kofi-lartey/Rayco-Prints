@@ -22,8 +22,8 @@ export const CONFIG = {
         location: {
             lat: 5.708327641251287,
             lng: 0.11070570742514928,
-            address: 'Prampram - V-PUB',
-            mapsUrl: 'https://www.google.com/maps/search/?api=1&query=5.708327641251287,0.11070570742514928'
+            address: 'Prampram - V-PUB, Ghana',
+            mapsUrl: 'https://www.google.com/maps/search/Prampram+V-PUB+Ghana'
         },
         businessHours: 'Mon-Fri, 8am-6pm'
     },

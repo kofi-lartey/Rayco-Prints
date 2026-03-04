@@ -103,7 +103,7 @@ const Services = () => {
       id: 'passport',
       title: 'Passport Pictures',
       description: 'Official passport photos for all visa applications',
-      image: 'https://images.unsplash.com/photo-1553222843-3d3c5d4d1b1b?w=400&h=300&fit=crop',
+      image: 'https://i.pinimg.com/736x/50/de/19/50de19add962cda96db262bd785343d7.jpg',
       icon: (
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
@@ -210,8 +210,8 @@ const Services = () => {
                 key={index}
                 onClick={() => setCurrentSlide(index)}
                 className={`h-2 rounded-full transition-all duration-300 ${index === currentSlide
-                    ? 'bg-white w-8'
-                    : 'bg-white/40 hover:bg-white/60 w-2'
+                  ? 'bg-white w-8'
+                  : 'bg-white/40 hover:bg-white/60 w-2'
                   }`}
                 aria-label={`Go to slide ${index + 1}`}
               />

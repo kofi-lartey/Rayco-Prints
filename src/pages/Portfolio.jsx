@@ -5,10 +5,10 @@ import { useState, useEffect } from 'react'
 const WHATSAPP_LINK = "https://wa.me/233246504887"
 
 const heroImages = [
-    "https://i.pinimg.com/1200x/6c/44/6c/6c446ce522a926960d4b087ea477b6d6.jpg",
-    "https://i.pinimg.com/736x/92/8b/c0/928bc076bba4864ee4de3d20ec6b23f5.jpg",
-    "https://i.pinimg.com/736x/b8/d7/61/b8d761e30e6894d332abadffbd0dfb22.jpg",
-    "https://i.pinimg.com/736x/36/45/61/3645614fbc0658bdb49eb394d498340c.jpg"
+    "https://i.pinimg.com/736x/50/de/19/50de19add962cda96db262bd785343d7.jpg",
+    "https://i.pinimg.com/736x/f6/c8/61/f6c861732047a947f1dbbdefa77186e3.jpg",
+    "https://i.pinimg.com/736x/ec/87/e0/ec87e0ccccddf4d306069243d34c5a2f.jpg",
+    "https://i.pinimg.com/736x/be/0f/bc/be0fbcf8198660bd407e6b6f29b5e92b.jpg"
 ]
 
 // Animated Counter Component
@@ -103,11 +103,11 @@ const Portfolio = () => {
             image: "https://i.pinimg.com/736x/20/fd/f2/20fdf294e2305e38cc14487485bb73e0.jpg"
         },
         {
-            category: "Photo Printing",
+            category: "Passport Pictures",
             color: "from-violet-500 to-purple-600",
             projects: 75,
-            icon: "📦",
-            image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=600&h=400&fit=crop"
+            icon: "📸",
+            image: "https://i.pinimg.com/736x/50/de/19/50de19add962cda96db262bd785343d7.jpg"
         },
     ]
 

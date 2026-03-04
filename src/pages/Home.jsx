@@ -55,10 +55,10 @@ const Home = () => {
     ]
 
     const services = [
-        { icon: "🖨️", title: "Printing", desc: "High-quality digital & offset printing", image: "https://images.unsplash.com/photo-1562564055-71e051d33c19?w=400&h=300&fit=crop" },
-        { icon: "📇", title: "Business Cards", desc: "Premium cards that make an impact", image: "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=400&h=300&fit=crop" },
-        { icon: "📜", title: "Banners", desc: "Large format for maximum visibility", image: "https://images.unsplash.com/photo-1520608421741-6824e9b8e26c?w=400&h=300&fit=crop" },
-        { icon: "👕", title: "Custom Apparel", desc: "Branded merchandise that stands out", image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=300&fit=crop" }
+        { icon: "🖨️", title: "Printing", desc: "High-quality digital & offset printing", image: "https://i.pinimg.com/1200x/26/04/ca/2604cad5d3e50901a4b4f849bd0b1ae1.jpg" },
+        { icon: "📇", title: "Business Cards", desc: "Premium cards that make an impact", image: "https://i.pinimg.com/736x/8d/36/46/8d36465fee3caa4147030012fd52c4d7.jpg" },
+        { icon: "📜", title: "Banners", desc: "Large format for maximum visibility", image: "https://i.pinimg.com/736x/f6/c8/61/f6c861732047a947f1dbbdefa77186e3.jpg" },
+        { icon: "👕", title: "Custom Apparel", desc: "Branded merchandise that stands out", image: "https://i.pinimg.com/736x/ec/87/e0/ec87e0ccccddf4d306069243d34c5a2f.jpg" }
     ]
 
     return (

@@ -127,8 +127,8 @@ const Footer = () => {
                             © {currentYear} {brand.fullName}. All rights reserved.
                         </p>
                         <div className="flex items-center gap-6 text-sm text-neutral-500">
-                            <span className="hover:text-primary-500 cursor-pointer transition-colors">Privacy Policy</span>
-                            <span className="hover:text-primary-500 cursor-pointer transition-colors">Terms of Service</span>
+                            <Link to="/privacy-policy" className="hover:text-primary-500 transition-colors">Privacy Policy</Link>
+                            <Link to="/terms-of-service" className="hover:text-primary-500 transition-colors">Terms of Service</Link>
                         </div>
                     </div>
                 </div>
