@@ -85,6 +85,18 @@ const getEmailHtml = (data) => {
                   </td>
                 </tr>
                 ` : ''}
+                
+                ${data.voiceUrl ? `
+                <tr>
+                  <td colspan="2" style="padding-top: 20px;">
+                    <p style="margin: 0; font-size: 11px; color: #999; text-transform: uppercase; font-weight: 700;">Voice Note</p>
+                    <audio controls style="width: 100%; margin-top: 10px;" src="${data.voiceUrl}">
+                      Your browser does not support the audio element.
+                    </audio>
+                    <p style="margin: 10px 0 0 0; font-size: 14px;"><a href="${data.voiceUrl}" style="color: #D81B60; text-decoration: none; font-weight: 600;">Download Voice Note →</a></p>
+                  </td>
+                </tr>
+                ` : ''}
               </table>
             </td>
           </tr>
@@ -119,6 +131,7 @@ exports.handler = async function (event) {
       quantity,
       totalPrice,
       fileUrl,
+      voiceUrl,
       message
     } = JSON.parse(event.body);
 
@@ -158,7 +171,9 @@ exports.handler = async function (event) {
       total_price: totalPrice || '0.00',
       message: message || 'No message',
       file_url: fileUrl || '',
+      voice_url: voiceUrl || '',
       has_file: fileUrl ? 'true' : 'false',
+      has_voice: voiceUrl ? 'true' : 'false',
       expiry_date: expiry_date,
       isImage: isImage ? 'true' : 'false',
       isPDF: isPDF ? 'true' : 'false'

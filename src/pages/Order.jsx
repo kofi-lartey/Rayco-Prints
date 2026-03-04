@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Input, Button, Select, Textarea } from '../components/ui'
 import { CONFIG } from '../config'
@@ -36,6 +36,22 @@ export default function Order() {
     const [filePreview, setFilePreview] = useState(null)
     const [isFileUploaded, setIsFileUploaded] = useState(false)
     const [fileInfo, setFileInfo] = useState({ format: '', resourceType: '' })
+
+    // Voice recording states
+    const [isRecording, setIsRecording] = useState(false)
+    const [recordedAudioUrl, setRecordedAudioUrl] = useState('')
+    const [recordingDuration, setRecordingDuration] = useState(0)
+    const [isUploading, setIsUploading] = useState(false)
+    const [audioBlob, setAudioBlob] = useState(null)
+
+    // Use refs for media recorder to persist across renders
+    const mediaRecorderRef = useRef(null)
+    const audioChunksRef = useRef([])
+    const durationIntervalRef = useRef(null)
+    const streamRef = useRef(null)
+
+    // Check if it's a secretarial service
+    const isSecretarial = formData.service?.toLowerCase().includes('secretarial') || formData.service === 'Secretarial Services'
 
     // Check if it's a photocopy service
     const isPhotocopy = formData.service?.toLowerCase().includes('photocopy') || formData.service === 'Photocopy'
@@ -126,6 +142,27 @@ export default function Order() {
         // For printing: just multiply
         if (isPrinting && qty > 0) {
             const total = printingPrice * qty * pages
+            return total.toFixed(2)
+        }
+
+        // Secretarial Services pricing - price per page based on item
+        if (isSecretarial) {
+            // Base price for secretarial work (typing per page)
+            let typingPrice = 2.00 // Default per page
+
+            // Check if it's CV writing (usually more expensive)
+            if (formData.item?.toLowerCase().includes('cv') || formData.item?.toLowerCase().includes('resume')) {
+                typingPrice = 50.00 // CV writing is more expensive
+            } else if (formData.item?.toLowerCase().includes('online application')) {
+                typingPrice = 20.00 // Online application per submission
+            } else {
+                // Regular typing - price per page
+                typingPrice = 2.00
+            }
+
+            // Calculate total: typing price × pages × quantity
+            const typingPages = parseInt(formData.pages) || 1
+            const total = typingPrice * typingPages * qty
             return total.toFixed(2)
         }
 
@@ -236,6 +273,91 @@ export default function Order() {
         }
     }
 
+    // Voice Recording Functions
+    const startRecording = async () => {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+            streamRef.current = stream
+            mediaRecorderRef.current = new MediaRecorder(stream)
+            audioChunksRef.current = []
+
+            mediaRecorderRef.current.ondataavailable = (event) => {
+                audioChunksRef.current.push(event.data)
+            }
+
+            mediaRecorderRef.current.onstop = async () => {
+                setIsUploading(true)
+
+                // Create blob with webm format for browser compatibility
+                const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' })
+                setAudioBlob(audioBlob)
+
+                // Upload to Cloudinary FIRST, then use the returned URL
+                await uploadVoice(audioBlob)
+
+                setIsUploading(false)
+
+                // Stop all tracks
+                if (streamRef.current) {
+                    streamRef.current.getTracks().forEach(track => track.stop())
+                }
+            }
+
+            mediaRecorderRef.current.start()
+            setIsRecording(true)
+
+            // Update duration every second
+            durationIntervalRef.current = setInterval(() => {
+                setRecordingDuration(prev => prev + 1)
+            }, 1000)
+        } catch (error) {
+            console.error('Error starting recording:', error)
+            alert('Could not access microphone. Please check permissions.')
+        }
+    }
+
+    const stopRecording = () => {
+        if (mediaRecorderRef.current && isRecording) {
+            mediaRecorderRef.current.stop()
+            setIsRecording(false)
+            if (durationIntervalRef.current) {
+                clearInterval(durationIntervalRef.current)
+            }
+        }
+    }
+
+    const uploadVoice = async (blob) => {
+        const cloudName = 'djjgkezui'
+        const uploadPreset = 'Rayco_images'
+
+        const formDataCloud = new FormData()
+        formDataCloud.append('file', blob)
+        formDataCloud.append('upload_preset', uploadPreset)
+        formDataCloud.append('resource_type', 'auto') // Use auto to accept audio files
+
+        try {
+            const response = await fetch(
+                `https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`,
+                {
+                    method: 'POST',
+                    body: formDataCloud
+                }
+            )
+
+            const data = await response.json()
+
+            if (data.secure_url) {
+                setRecordedAudioUrl(data.secure_url)
+                setFileInfo({
+                    format: 'audio',
+                    resourceType: 'video'
+                })
+            }
+        } catch (error) {
+            console.error('Voice upload error:', error)
+        }
+    }
+
     const { contact, emailjs: emailConfig } = CONFIG
 
     const handleSubmit = async (e) => {
@@ -256,6 +378,8 @@ export default function Order() {
             quantity: formData.quantity,
             totalPrice: formData.totalPrice,
             fileUrl: uploadedFileUrl,
+            voiceUrl: recordedAudioUrl,
+            fileInfo: fileInfo,
             message: formData.message,
             timestamp: new Date().toISOString()
         }
@@ -305,6 +429,7 @@ ${formData.message}`
                 quantity: formData.quantity,
                 totalPrice: formData.totalPrice,
                 fileUrl: uploadedFileUrl,
+                voiceUrl: recordedAudioUrl,
                 fileInfo: fileInfo,
                 message: formData.message
             }
@@ -346,6 +471,10 @@ ${formData.message}`
             setFilePreview(null)
             setIsFileUploaded(false)
             setFileInfo({ format: '', resourceType: '' })
+            // Reset voice recording
+            setRecordedAudioUrl('')
+            setAudioBlob(null)
+            setRecordingDuration(0)
             setFormData({
                 name: '',
                 email: '',
@@ -619,97 +748,234 @@ ${formData.message}`
                         />
                     </div>
 
-                    {/* File Upload */}
-                    <div>
-                        <label htmlFor="file" className="block text-sm font-medium text-gray-700 mb-1">
-                            Upload File (Optional)
-                        </label>
-                        <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md hover:border-blue-400 transition-colors">
-                            <div className="space-y-1 text-center">
-                                {uploadedFile ? (
-                                    <div className="flex flex-col items-center">
-                                        {filePreview ? (
-                                            <div className="mb-3">
-                                                <img
-                                                    src={filePreview}
-                                                    alt="Preview"
-                                                    className="max-h-48 rounded-lg shadow-md"
-                                                />
-                                            </div>
-                                        ) : (
-                                            <div className="mb-3 p-4 bg-blue-50 rounded-lg">
-                                                <svg className="w-12 h-12 mx-auto text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                                </svg>
-                                            </div>
-                                        )}
-                                        <p className="text-sm text-green-600 font-medium">{uploadedFile.name}</p>
-                                        <p className="text-xs text-gray-500">
-                                            {(uploadedFile.size / 1024).toFixed(1)} KB
-                                        </p>
-                                        {uploadProgress < 100 && (
-                                            <p className="text-blue-600 text-sm mt-1">Uploading... {uploadProgress}%</p>
-                                        )}
-                                        {uploadProgress === 100 && uploadedFileUrl && (
-                                            <p className="text-green-600 text-sm mt-1">✓ File uploaded successfully!</p>
-                                        )}
-                                        <button
-                                            type="button"
-                                            onClick={() => {
-                                                setUploadedFile(null)
-                                                setUploadedFileUrl('')
-                                                setFilePreview(null)
-                                                setIsFileUploaded(false)
-                                            }}
-                                            className="mt-2 text-sm text-red-500 hover:text-red-700"
-                                        >
-                                            Remove file
-                                        </button>
-                                    </div>
-                                ) : (
-                                    <>
-                                        <svg
-                                            className="mx-auto h-12 w-12 text-gray-400"
-                                            stroke="currentColor"
-                                            fill="none"
-                                            viewBox="0 0 48 48"
-                                            aria-hidden="true"
-                                        >
-                                            <path
-                                                d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                                                strokeWidth={2}
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                            />
-                                        </svg>
-                                        <div className="flex text-sm text-gray-600 justify-center">
-                                            <label
-                                                htmlFor="file-upload"
-                                                className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none"
-                                            >
-                                                <span>Upload a file</span>
-                                                <input
-                                                    id="file-upload"
-                                                    name="file-upload"
-                                                    type="file"
-                                                    className="sr-only"
-                                                    onChange={handleFileChange}
-                                                    accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.gif,.webp,.bmp"
-                                                />
-                                            </label>
-                                            <p className="pl-1">or drag and drop</p>
+                    {/* File Upload or Voice Recording */}
+                    {isSecretarial ? (
+                        // Voice Recording + File Upload for Secretarial Services
+                        <div className="space-y-6">
+                            {/* Voice Recording Section */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Option 1: Record Voice Note
+                                </label>
+                                <div className="mt-1 flex flex-col items-center justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+                                    {!recordedAudioUrl && !isUploading ? (
+                                        <div className="text-center">
+                                            <svg className="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                                                <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" fill="currentColor" />
+                                                <path d="M19 10v2a7 7 0 01-14 0v-2m7 9v3m-3-18v18m3-15h6m-6 0H8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                            </svg>
+                                            <p className="mt-2 text-sm text-gray-600">
+                                                Record your voice message
+                                            </p>
+                                            <p className="text-xs text-gray-500 mb-4">
+                                                Tell us what you need typed
+                                            </p>
+
+                                            {!isRecording ? (
+                                                <button
+                                                    type="button"
+                                                    onClick={startRecording}
+                                                    className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full flex items-center mx-auto"
+                                                >
+                                                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                                                    </svg>
+                                                    Start Recording
+                                                </button>
+                                            ) : (
+                                                <div className="flex flex-col items-center">
+                                                    <div className="flex items-center justify-center w-16 h-16 rounded-full bg-red-100 mb-2">
+                                                        <div className="w-4 h-4 bg-red-500 rounded-full animate-pulse"></div>
+                                                    </div>
+                                                    <p className="text-red-500 font-medium mb-2">Recording... {recordingDuration}s</p>
+                                                    <button
+                                                        type="button"
+                                                        onClick={stopRecording}
+                                                        className="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-full"
+                                                    >
+                                                        Stop Recording
+                                                    </button>
+                                                </div>
+                                            )}
                                         </div>
-                                        <p className="text-xs text-gray-500">
-                                            PDF, DOC, DOCX, PNG, JPG up to 10MB
-                                        </p>
-                                    </>
-                                )}
+                                    ) : isUploading ? (
+                                        <div className="text-center py-4">
+                                            <svg className="animate-spin mx-auto h-12 w-12 text-blue-500" fill="none" viewBox="0 0 24 24">
+                                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                            </svg>
+                                            <p className="mt-2 text-sm text-gray-600">
+                                                Uploading to cloud...
+                                            </p>
+                                        </div>
+                                    ) : (
+                                        <div className="text-center w-full">
+                                            <audio
+                                                controls
+                                                src={recordedAudioUrl}
+                                                className="w-full mb-4"
+                                            />
+                                            <p className="text-sm text-green-600 font-medium mb-2">✓ Voice recorded!</p>
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setRecordedAudioUrl('')
+                                                    setAudioBlob(null)
+                                                    setRecordingDuration(0)
+                                                    setFileInfo({ format: '', resourceType: '' })
+                                                }}
+                                                className="text-sm text-red-500 hover:text-red-700"
+                                            >
+                                                Remove recording
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* OR Divider */}
+                            <div className="flex items-center">
+                                <div className="flex-grow border-t border-gray-300"></div>
+                                <span className="flex-shrink-0 mx-4 text-gray-400 text-sm">OR</span>
+                                <div className="flex-grow border-t border-gray-300"></div>
+                            </div>
+
+                            {/* File Upload Section */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Option 2: Upload Document (Photo/Scan of handwritten notes)
+                                </label>
+                                <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md hover:border-blue-400 transition-colors">
+                                    <div className="space-y-1 text-center">
+                                        {!uploadedFile ? (
+                                            <>
+                                                <svg className="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                                                    <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+                                                </svg>
+                                                <div className="flex text-sm text-gray-600 justify-center">
+                                                    <label htmlFor="file-upload-secretarial" className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500">
+                                                        <span>Upload a file</span>
+                                                        <input id="file-upload-secretarial" name="file-upload-secretarial" type="file" className="sr-only" onChange={handleFileChange} accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.gif,.webp,.bmp" />
+                                                    </label>
+                                                </div>
+                                                <p className="text-xs text-gray-500">PDF, DOC, Images up to 10MB</p>
+                                            </>
+                                        ) : (
+                                            <div className="flex flex-col items-center">
+                                                {filePreview ? (
+                                                    <img src={filePreview} alt="Preview" className="max-h-48 rounded-lg shadow-md mb-3" />
+                                                ) : (
+                                                    <div className="mb-3 p-4 bg-blue-50 rounded-lg">
+                                                        <svg className="w-12 h-12 mx-auto text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                        </svg>
+                                                    </div>
+                                                )}
+                                                <p className="text-sm text-green-600 font-medium">{uploadedFile.name}</p>
+                                                <button type="button" onClick={() => { setUploadedFile(null); setUploadedFileUrl(''); setFilePreview(null); setIsFileUploaded(false); }} className="mt-2 text-sm text-red-500">Remove file</button>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <p className="mt-2 text-xs text-gray-500 text-center">
+                                Or describe what you need in the message box below
+                            </p>
+                        </div>
+                    ) : (
+                        // Regular File Upload
+                        <div>
+                            <label htmlFor="file" className="block text-sm font-medium text-gray-700 mb-1">
+                                Upload File (Optional)
+                            </label>
+                            <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md hover:border-blue-400 transition-colors">
+                                <div className="space-y-1 text-center">
+                                    {uploadedFile ? (
+                                        <div className="flex flex-col items-center">
+                                            {filePreview ? (
+                                                <div className="mb-3">
+                                                    <img
+                                                        src={filePreview}
+                                                        alt="Preview"
+                                                        className="max-h-48 rounded-lg shadow-md"
+                                                    />
+                                                </div>
+                                            ) : (
+                                                <div className="mb-3 p-4 bg-blue-50 rounded-lg">
+                                                    <svg className="w-12 h-12 mx-auto text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                    </svg>
+                                                </div>
+                                            )}
+                                            <p className="text-sm text-green-600 font-medium">{uploadedFile.name}</p>
+                                            <p className="text-xs text-gray-500">
+                                                {(uploadedFile.size / 1024).toFixed(1)} KB
+                                            </p>
+                                            {uploadProgress < 100 && (
+                                                <p className="text-blue-600 text-sm mt-1">Uploading... {uploadProgress}%</p>
+                                            )}
+                                            {uploadProgress === 100 && uploadedFileUrl && (
+                                                <p className="text-green-600 text-sm mt-1">✓ File uploaded successfully!</p>
+                                            )}
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setUploadedFile(null)
+                                                    setUploadedFileUrl('')
+                                                    setFilePreview(null)
+                                                    setIsFileUploaded(false)
+                                                }}
+                                                className="mt-2 text-sm text-red-500 hover:text-red-700"
+                                            >
+                                                Remove file
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <>
+                                            <svg
+                                                className="mx-auto h-12 w-12 text-gray-400"
+                                                stroke="currentColor"
+                                                fill="none"
+                                                viewBox="0 0 48 48"
+                                                aria-hidden="true"
+                                            >
+                                                <path
+                                                    d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                                                    strokeWidth={2}
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                />
+                                            </svg>
+                                            <div className="flex text-sm text-gray-600 justify-center">
+                                                <label
+                                                    htmlFor="file-upload"
+                                                    className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none"
+                                                >
+                                                    <span>Upload a file</span>
+                                                    <input
+                                                        id="file-upload"
+                                                        name="file-upload"
+                                                        type="file"
+                                                        className="sr-only"
+                                                        onChange={handleFileChange}
+                                                        accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.gif,.webp,.bmp"
+                                                    />
+                                                </label>
+                                                <p className="pl-1">or drag and drop</p>
+                                            </div>
+                                            <p className="text-xs text-gray-500">
+                                                PDF, DOC, DOCX, PNG, JPG up to 10MB
+                                            </p>
+                                        </>
+                                    )}
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    )}
 
                     {/* File Preview Section */}
-                    {uploadedFile && (
+                    {uploadedFile && !isSecretarial && (
                         <div className="bg-blue-50 border-2 border-blue-400 rounded-lg p-6">
                             <div className="flex items-center justify-between mb-4">
                                 <h3 className="text-lg font-bold text-blue-900">📎 File Preview</h3>

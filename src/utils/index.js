@@ -173,6 +173,7 @@ export const sendOrderEmail = async (config, orderData) => {
         quantity: String(orderData.quantity || 1),
         total_price: String(orderData.totalPrice || 0),
         file_url: orderData.fileUrl || '',
+        voice_url: orderData.voiceUrl || '',
         file_format: (orderData.fileInfo?.format) || 'Unknown',
         resource_type: (orderData.fileInfo?.resourceType) || 'Unknown',
         message: orderData.message || 'No message',
