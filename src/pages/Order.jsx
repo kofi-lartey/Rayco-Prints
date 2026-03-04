@@ -4,9 +4,24 @@ import { Input, Button, Select, Textarea } from '../components/ui'
 import { CONFIG } from '../config'
 import { sendOrderEmail } from '../utils'
 
+const heroImages = [
+    "https://images.unsplash.com/photo-1562564055-71e051d33c19?w=1200&h=800&fit=crop",
+    "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=1200&h=800&fit=crop",
+    "https://images.unsplash.com/photo-1551434678-e076c223a692?w=1200&h=800&fit=crop",
+    "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=1200&h=800&fit=crop"
+]
+
 export default function Order() {
     const [searchParams] = useSearchParams()
     const navigate = useNavigate()
+    const [currentSlide, setCurrentSlide] = useState(0)
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setCurrentSlide((prev) => (prev + 1) % heroImages.length)
+        }, 4000)
+        return () => clearInterval(timer)
+    }, [])
 
     // Pre-filled service from URL
     const prefillService = searchParams.get('service') || ''
@@ -496,22 +511,53 @@ ${formData.message}`
     const showNB = isPhotocopy
 
     return (
-        <div className="min-h-screen pt-24 pb-16 bg-gradient-to-b from-neutral-50 to-white">
-            <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen pt-24 pb-16 relative overflow-hidden">
+            {/* Background Carousel */}
+            <div className="absolute inset-0">
+                {heroImages.map((image, index) => (
+                    <div
+                        key={index}
+                        className={`absolute inset-0 transition-opacity duration-1000 ${index === currentSlide ? 'opacity-100' : 'opacity-0'}`}
+                    >
+                        <img
+                            src={image}
+                            alt={`Slide ${index + 1}`}
+                            className="w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 bg-neutral-900/70"></div>
+                    </div>
+                ))}
+                {/* Slide Navigation Dots */}
+                <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-3 z-10">
+                    {heroImages.map((_, index) => (
+                        <button
+                            key={index}
+                            onClick={() => setCurrentSlide(index)}
+                            className={`h-2 rounded-full transition-all duration-300 ${index === currentSlide
+                                ? 'bg-white w-8'
+                                : 'bg-white/40 hover:bg-white/60 w-2'
+                                }`}
+                            aria-label={`Go to slide ${index + 1}`}
+                        />
+                    ))}
+                </div>
+            </div>
+
+            <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 {/* Header */}
                 <div className="text-center mb-10">
-                    <h1 className="text-3xl md:text-4xl font-heading font-bold text-neutral-900 mb-2">Place Your Order</h1>
-                    <p className="text-neutral-600">Fill in the details below and we'll get started on your order</p>
+                    <h1 className="text-3xl md:text-4xl font-heading font-bold text-white mb-2">Place Your Order</h1>
+                    <p className="text-neutral-200">Fill in the details below and we'll get started on your order</p>
                 </div>
 
                 {/* Netlify Forms hidden input */}
                 <input type="hidden" name="form-name" value="orders" />
 
-                <form onSubmit={handleSubmit} data-netlify="true" className="bg-white rounded-2xl shadow-soft-lg border border-neutral-100 p-8 space-y-6">
+                <form onSubmit={handleSubmit} data-netlify="true" className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-soft-lg border border-white/20 p-8 space-y-6">
                     {/* Selected Service Display */}
                     {formData.service && (
-                        <div className="bg-primary-50 border border-primary-200 rounded-xl p-4">
-                            <p className="text-sm text-primary-800">
+                        <div className="bg-primary-500/20 border border-primary-400/30 rounded-xl p-4 backdrop-blur-sm">
+                            <p className="text-sm text-white">
                                 <strong>Selected Service:</strong> {formData.service}
                                 {formData.item && <> - {formData.item}</>}
                             </p>

@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import emailjs from '@emailjs/browser'
 import { Link } from 'react-router-dom'
 import { useForm, useLoading } from '../hooks'
@@ -6,12 +6,20 @@ import { Button, Input, Textarea, Card } from '../components/ui'
 import { CONFIG } from '../config'
 import { generateWhatsAppLink, isValidEmail, isValidPhone } from '../utils'
 
+const heroImages = [
+    "https://images.unsplash.com/photo-1562564055-71e051d33c19?w=1200&h=800&fit=crop",
+    "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=1200&h=800&fit=crop",
+    "https://images.unsplash.com/photo-1551434678-e076c223a692?w=1200&h=800&fit=crop",
+    "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=1200&h=800&fit=crop"
+]
+
 /**
  * Contact Page
  * Modern, elegant contact form with email.js integration
  */
 const Contact = () => {
     const formRef = useRef()
+    const [currentSlide, setCurrentSlide] = useState(0)
     const { formData, handleChange, resetForm } = useForm({
         name: '',
         email: '',
@@ -21,6 +29,13 @@ const Contact = () => {
     })
     const { isLoading, error, startLoading, stopLoading, setLoadingError, clearError } = useLoading()
     const [success, setSuccess] = useState(false)
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setCurrentSlide((prev) => (prev + 1) % heroImages.length)
+        }, 4000)
+        return () => clearInterval(timer)
+    }, [])
 
     const { contact, emailjs: emailConfig } = CONFIG
 
@@ -54,7 +69,8 @@ const Contact = () => {
             ),
             title: "Location",
             value: contact.address,
-            description: "Visit our shop during business hours"
+            description: "Visit our shop during business hours",
+            link: contact.location?.mapsUrl
         }
     ]
 
@@ -131,15 +147,46 @@ const Contact = () => {
     return (
         <div className="min-h-screen pt-20">
             {/* Header */}
-            <section className="py-16 bg-gradient-to-br from-neutral-50 via-white to-neutral-100">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                    <span className="inline-block px-4 py-2 bg-primary-50 text-primary-600 rounded-full text-sm font-medium mb-4">
+            <section className="py-16 relative overflow-hidden">
+                {/* Background Carousel */}
+                <div className="absolute inset-0">
+                    {heroImages.map((image, index) => (
+                        <div
+                            key={index}
+                            className={`absolute inset-0 transition-opacity duration-1000 ${index === currentSlide ? 'opacity-100' : 'opacity-0'}`}
+                        >
+                            <img
+                                src={image}
+                                alt={`Slide ${index + 1}`}
+                                className="w-full h-full object-cover"
+                            />
+                            <div className="absolute inset-0 bg-neutral-900/70"></div>
+                        </div>
+                    ))}
+                    {/* Slide Navigation Dots */}
+                    <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-3 z-10">
+                        {heroImages.map((_, index) => (
+                            <button
+                                key={index}
+                                onClick={() => setCurrentSlide(index)}
+                                className={`h-2 rounded-full transition-all duration-300 ${index === currentSlide
+                                    ? 'bg-white w-8'
+                                    : 'bg-white/40 hover:bg-white/60 w-2'
+                                    }`}
+                                aria-label={`Go to slide ${index + 1}`}
+                            />
+                        ))}
+                    </div>
+                </div>
+
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+                    <span className="inline-block px-4 py-2 bg-primary-500/20 text-primary-300 rounded-full text-sm font-medium mb-4 backdrop-blur-sm">
                         Contact Us
                     </span>
-                    <h1 className="text-4xl md:text-5xl font-heading font-bold text-neutral-900 mb-4">
+                    <h1 className="text-4xl md:text-5xl font-heading font-bold text-white mb-4">
                         Get In <span className="gradient-text-primary">Touch</span>
                     </h1>
-                    <p className="text-xl text-neutral-600 max-w-2xl mx-auto">
+                    <p className="text-xl text-neutral-200 max-w-2xl mx-auto">
                         Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
                     </p>
                 </div>
@@ -161,7 +208,18 @@ const Contact = () => {
                                         </div>
                                         <div>
                                             <h3 className="font-heading font-semibold text-neutral-900">{info.title}</h3>
-                                            <p className="text-neutral-600">{info.value}</p>
+                                            {info.link ? (
+                                                <a
+                                                    href={info.link}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="text-neutral-600 hover:text-primary-500 underline"
+                                                >
+                                                    {info.value}
+                                                </a>
+                                            ) : (
+                                                <p className="text-neutral-600">{info.value}</p>
+                                            )}
                                             <p className="text-neutral-500 text-sm">{info.description}</p>
                                         </div>
                                     </Card>
@@ -182,15 +240,19 @@ const Contact = () => {
                             </a>
 
                             {/* Map Placeholder */}
-                            <div className="mt-8 bg-neutral-100 rounded-2xl h-64 flex items-center justify-center">
-                                <div className="text-center text-neutral-500">
-                                    <svg className="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    </svg>
-                                    <p className="font-medium">Map Placeholder</p>
-                                    <p className="text-sm">Add your Google Maps embed here</p>
-                                </div>
+                            {/* Interactive Map */}
+                            <div className="mt-8 overflow-hidden rounded-2xl shadow-inner border border-neutral-100 h-80 w-full">
+                                <iframe
+                                    title="Store Location"
+                                    width="100%"
+                                    height="100%"
+                                    frameBorder="0"
+                                    scrolling="no"
+                                    marginHeight="0"
+                                    marginWidth="0"
+                                    src={`https://maps.google.com/maps?q=${contact.location?.lat || 5.708327641251287},${contact.location?.lng || 0.11070570742514928}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
+                                    className="grayscale-[20%] contrast-[1.1] hover:grayscale-0 transition-all duration-500"
+                                ></iframe>
                             </div>
                         </div>
 

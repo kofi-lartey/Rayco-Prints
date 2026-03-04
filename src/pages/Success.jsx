@@ -53,7 +53,7 @@ const Success = () => {
                         <h3 className="font-bold text-slate-900 mb-4">Need to reach us?</h3>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
                             <a
-                                href="https://wa.me/233500000000"
+                                href="https://wa.me/233246504887"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="inline-flex items-center gap-2 bg-green-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-600 transition-colors"

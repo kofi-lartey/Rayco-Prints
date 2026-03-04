@@ -9,22 +9,29 @@ export const CONFIG = {
         name: 'RaycoPrints',
         fullName: 'Rayco Graphix & Secretarial Services',
         tagline: 'Precision Printing. Professional Results.',
-        description: 'Your premier printing and secretarial services. Quality you can feel, service you can trust.'
+        description: 'Your premier printing and secretarial services. Quality you can feel, service you can trust.',
+        logo: 'https://res.cloudinary.com/djjgkezui/image/upload/v1772650253/logo_krbgmz.png'
     },
 
     // Contact Information
     contact: {
-        phone: '+233 50 000 0000',
-        whatsapp: 'https://wa.me/233500000000',
-        email: 'orders@raycographix.com',
-        address: 'Accra, Ghana',
+        phone: '+233 24 650 4887',
+        whatsapp: 'https://wa.me/233246504887',
+        email: 'raycoprints@gmail.com',
+        address: 'Prampram - V-PUB, Ghana',
+        location: {
+            lat: 5.708327641251287,
+            lng: 0.11070570742514928,
+            address: 'Prampram - V-PUB',
+            mapsUrl: 'https://www.google.com/maps/search/?api=1&query=5.708327641251287,0.11070570742514928'
+        },
         businessHours: 'Mon-Fri, 8am-6pm'
     },
 
     // Social Links
     social: {
-        whatsapp: 'https://wa.me/233500000000',
-        email: 'orders@raycographix.com'
+        whatsapp: 'https://wa.me/233246504887',
+        email: 'raycoprints@gmail.com'
     },
 
     // Navigation

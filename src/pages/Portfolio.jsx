@@ -1,16 +1,114 @@
 import { Link } from 'react-router-dom'
 import { Card } from '../components/ui'
+import { useState, useEffect } from 'react'
 
-const WHATSAPP_LINK = "https://wa.me/233500000000"
+const WHATSAPP_LINK = "https://wa.me/233246504887"
+
+const heroImages = [
+    "https://i.pinimg.com/1200x/6c/44/6c/6c446ce522a926960d4b087ea477b6d6.jpg",
+    "https://i.pinimg.com/736x/92/8b/c0/928bc076bba4864ee4de3d20ec6b23f5.jpg",
+    "https://i.pinimg.com/736x/b8/d7/61/b8d761e30e6894d332abadffbd0dfb22.jpg",
+    "https://i.pinimg.com/736x/36/45/61/3645614fbc0658bdb49eb394d498340c.jpg"
+]
+
+// Animated Counter Component
+const AnimatedCounter = ({ end, duration = 2000, suffix = '' }) => {
+    const [count, setCount] = useState(0)
+    const [isVisible, setIsVisible] = useState(false)
+    const counterRef = useState({ current: null })
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setIsVisible(true)
+                }
+            },
+            { threshold: 0.5 }
+        )
+
+        const element = document.getElementById('stats-section')
+        if (element) observer.observe(element)
+
+        return () => observer.disconnect()
+    }, [])
+
+    useEffect(() => {
+        if (!isVisible) return
+
+        let startTime
+        const step = (timestamp) => {
+            if (!startTime) startTime = timestamp
+            const progress = Math.min((timestamp - startTime) / duration, 1)
+
+            // Easing function for smooth animation
+            const easeOutQuart = 1 - Math.pow(1 - progress, 4)
+            setCount(Math.floor(easeOutQuart * end))
+
+            if (progress < 1) {
+                requestAnimationFrame(step)
+            }
+        }
+
+        requestAnimationFrame(step)
+    }, [isVisible, end, duration])
+
+    return <span>{count}{suffix}</span>
+}
 
 const Portfolio = () => {
+    const [currentSlide, setCurrentSlide] = useState(0)
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setCurrentSlide((prev) => (prev + 1) % heroImages.length)
+        }, 4000)
+        return () => clearInterval(timer)
+    }, [])
+
     const portfolioItems = [
-        { category: "Business Cards", color: "from-primary-500 to-primary-700", projects: 120, icon: "📇" },
-        { category: "Banners", color: "from-neutral-600 to-neutral-800", projects: 85, icon: "🚩" },
-        { category: "Apparel", color: "from-accent-500 to-accent-600", projects: 200, icon: "👕" },
-        { category: "Stationery", color: "from-teal-500 to-cyan-600", projects: 95, icon: "📝" },
-        { category: "Brochures", color: "from-rose-500 to-pink-600", projects: 150, icon: "📄" },
-        { category: "Packaging", color: "from-violet-500 to-purple-600", projects: 75, icon: "📦" },
+        {
+            category: "Business Cards",
+            color: "from-primary-500 to-primary-700",
+            projects: 120,
+            icon: "📇",
+            image: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=600&h=400&fit=crop"
+        },
+        {
+            category: "Banners",
+            color: "from-neutral-600 to-neutral-800",
+            projects: 85,
+            icon: "🚩",
+            image: "https://i.pinimg.com/736x/f6/c8/61/f6c861732047a947f1dbbdefa77186e3.jpg"
+        },
+        {
+            category: "Custom Apparel",
+            color: "from-accent-500 to-accent-600",
+            projects: 200,
+            icon: "👕",
+            image: "https://i.pinimg.com/736x/ec/87/e0/ec87e0ccccddf4d306069243d34c5a2f.jpg"
+        },
+        {
+            category: "Stationery",
+            color: "from-teal-500 to-cyan-600",
+            projects: 95,
+            icon: "📝",
+            image: "https://i.pinimg.com/736x/be/0f/bc/be0fbcf8198660bd407e6b6f29b5e92b.jpg"
+        },
+        {
+            category: "Brochures",
+            color: "from-rose-500 to-pink-600",
+            projects: 150,
+            icon: "📄",
+            image: "https://i.pinimg.com/736x/20/fd/f2/20fdf294e2305e38cc14487485bb73e0.jpg"
+        },
+        {
+            category: "Photo Printing",
+            color: "from-violet-500 to-purple-600",
+            projects: 75,
+            icon: "📦",
+            image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=600&h=400&fit=crop"
+        },
     ]
 
     const testimonials = [
@@ -37,15 +135,46 @@ const Portfolio = () => {
     return (
         <div className="min-h-screen pt-20">
             {/* Header */}
-            <section className="py-16 bg-gradient-to-br from-neutral-50 via-white to-neutral-100">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                    <span className="inline-block px-4 py-2 bg-primary-50 text-primary-600 rounded-full text-sm font-medium mb-4">
+            <section className="py-16 relative overflow-hidden">
+                {/* Background Carousel */}
+                <div className="absolute inset-0">
+                    {heroImages.map((image, index) => (
+                        <div
+                            key={index}
+                            className={`absolute inset-0 transition-opacity duration-1000 ${index === currentSlide ? 'opacity-100' : 'opacity-0'}`}
+                        >
+                            <img
+                                src={image}
+                                alt={`Slide ${index + 1}`}
+                                className="w-full h-full object-cover"
+                            />
+                            <div className="absolute inset-0 bg-neutral-900/70"></div>
+                        </div>
+                    ))}
+                    {/* Slide Navigation Dots */}
+                    <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-3 z-10">
+                        {heroImages.map((_, index) => (
+                            <button
+                                key={index}
+                                onClick={() => setCurrentSlide(index)}
+                                className={`h-2 rounded-full transition-all duration-300 ${index === currentSlide
+                                    ? 'bg-white w-8'
+                                    : 'bg-white/40 hover:bg-white/60 w-2'
+                                    }`}
+                                aria-label={`Go to slide ${index + 1}`}
+                            />
+                        ))}
+                    </div>
+                </div>
+
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+                    <span className="inline-block px-4 py-2 bg-primary-500/20 text-primary-300 rounded-full text-sm font-medium mb-4 backdrop-blur-sm">
                         Our Work
                     </span>
-                    <h1 className="text-4xl md:text-5xl font-heading font-bold text-neutral-900 mb-4">
+                    <h1 className="text-4xl md:text-5xl font-heading font-bold text-white mb-4">
                         Featured <span className="gradient-text-primary">Projects</span>
                     </h1>
-                    <p className="text-xl text-neutral-600 max-w-2xl mx-auto">
+                    <p className="text-xl text-neutral-200 max-w-2xl mx-auto">
                         A glimpse of what we've created for our satisfied clients across various industries.
                     </p>
                 </div>
@@ -61,14 +190,19 @@ const Portfolio = () => {
                                 className="group relative h-72 rounded-2xl overflow-hidden cursor-pointer animate-fade-in-up"
                                 style={{ animationDelay: `${index * 100}ms` }}
                             >
-                                <div className={`absolute inset-0 bg-gradient-to-br ${item.color} group-hover:scale-110 transition-transform duration-500`}></div>
-                                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300"></div>
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                    <span className="text-6xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform group-hover:scale-110">
+                                {/* Image */}
+                                <img
+                                    src={item.image}
+                                    alt={item.category}
+                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                />
+                                <div className="absolute inset-0 bg-black/30 group-hover:bg-black/50 transition-colors duration-300"></div>
+                                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                    <span className="text-6xl transform group-hover:scale-110 transition-transform duration-300">
                                         {item.icon}
                                     </span>
                                 </div>
-                                <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/60 to-transparent">
+                                <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/70 to-transparent">
                                     <span className="text-white font-heading font-semibold text-lg">{item.category}</span>
                                     <p className="text-white/70 text-sm">{item.projects} projects completed</p>
                                 </div>
@@ -79,23 +213,23 @@ const Portfolio = () => {
             </section>
 
             {/* Stats Section */}
-            <section className="py-16 bg-neutral-900">
+            <section id="stats-section" className="py-16 bg-neutral-900">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="grid md:grid-cols-4 gap-8 text-center">
                         <div className="p-6">
-                            <div className="text-4xl md:text-5xl font-heading font-bold text-primary-400 mb-2">500+</div>
+                            <div className="text-4xl md:text-5xl font-heading font-bold text-primary-400 mb-2"><AnimatedCounter end={500} suffix="+" /></div>
                             <div className="text-neutral-400">Happy Clients</div>
                         </div>
                         <div className="p-6">
-                            <div className="text-4xl md:text-5xl font-heading font-bold text-primary-400 mb-2">5+</div>
+                            <div className="text-4xl md:text-5xl font-heading font-bold text-primary-400 mb-2"><AnimatedCounter end={5} suffix="+" /></div>
                             <div className="text-neutral-400">Years Experience</div>
                         </div>
                         <div className="p-6">
-                            <div className="text-4xl md:text-5xl font-heading font-bold text-primary-400 mb-2">10K+</div>
+                            <div className="text-4xl md:text-5xl font-heading font-bold text-primary-400 mb-2"><AnimatedCounter end={5000} suffix="+" /></div>
                             <div className="text-neutral-400">Orders Completed</div>
                         </div>
                         <div className="p-6">
-                            <div className="text-4xl md:text-5xl font-heading font-bold text-primary-400 mb-2">98%</div>
+                            <div className="text-4xl md:text-5xl font-heading font-bold text-primary-400 mb-2"><AnimatedCounter end={98} suffix="%" /></div>
                             <div className="text-neutral-400">Satisfaction Rate</div>
                         </div>
                     </div>

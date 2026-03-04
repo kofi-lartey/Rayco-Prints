@@ -1,9 +1,26 @@
 import { Link } from 'react-router-dom'
 import { Card } from '../components/ui'
+import { useState, useEffect } from 'react'
 
-const WHATSAPP_LINK = "https://wa.me/233500000000"
+const WHATSAPP_LINK = "https://wa.me/233246504887"
+
+const heroImages = [
+    "https://images.unsplash.com/photo-1562564055-71e051d33c19?w=800&h=600&fit=crop",
+    "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=800&h=600&fit=crop",
+    "https://images.unsplash.com/photo-1551434678-e076c223a692?w=800&h=600&fit=crop",
+    "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=800&h=600&fit=crop"
+]
 
 const Home = () => {
+    const [currentSlide, setCurrentSlide] = useState(0)
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setCurrentSlide((prev) => (prev + 1) % heroImages.length)
+        }, 4000)
+        return () => clearInterval(timer)
+    }, [])
+
     const features = [
         {
             image: "https://images.unsplash.com/photo-1562564055-71e051d33c19?w=400&h=300&fit=crop",
@@ -47,34 +64,53 @@ const Home = () => {
     return (
         <div className="min-h-screen">
             {/* Hero Section */}
-            <section className="relative min-h-screen flex items-center bg-gradient-to-br from-neutral-50 via-white to-neutral-100 overflow-hidden">
-                {/* Background Pattern */}
-                <div className="absolute inset-0 opacity-40">
-                    <div className="absolute inset-0" style={{
-                        backgroundImage: `radial-gradient(circle at 1px 1px, rgb(13, 59, 46) 1px, transparent 0)`,
-                        backgroundSize: '40px 40px'
-                    }}></div>
+            <section className="relative min-h-screen flex items-center overflow-hidden">
+                {/* Background Carousel */}
+                <div className="absolute inset-0">
+                    {heroImages.map((image, index) => (
+                        <div
+                            key={index}
+                            className={`absolute inset-0 transition-opacity duration-1000 ${index === currentSlide ? 'opacity-100' : 'opacity-0'}`}
+                        >
+                            <img
+                                src={image}
+                                alt={`Slide ${index + 1}`}
+                                className="w-full h-full object-cover"
+                            />
+                            <div className="absolute inset-0 bg-neutral-900/70"></div>
+                        </div>
+                    ))}
+                    {/* Slide Navigation Dots */}
+                    <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-3 z-10">
+                        {heroImages.map((_, index) => (
+                            <button
+                                key={index}
+                                onClick={() => setCurrentSlide(index)}
+                                className={`h-2 rounded-full transition-all duration-300 ${index === currentSlide
+                                        ? 'bg-white w-8'
+                                        : 'bg-white/40 hover:bg-white/60 w-2'
+                                    }`}
+                                aria-label={`Go to slide ${index + 1}`}
+                            />
+                        ))}
+                    </div>
                 </div>
-
-                {/* Decorative Elements */}
-                <div className="absolute top-1/4 -right-20 w-96 h-96 bg-primary-500/5 rounded-full blur-3xl"></div>
-                <div className="absolute bottom-1/4 -left-20 w-80 h-80 bg-accent-500/5 rounded-full blur-3xl"></div>
 
                 <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
                     <div className="grid lg:grid-cols-2 gap-12 items-center">
                         {/* Content */}
                         <div className="text-center lg:text-left animate-fade-in-up">
-                            <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary-50 text-primary-600 rounded-full text-sm font-medium mb-6">
-                                <span className="w-2 h-2 bg-primary-500 rounded-full animate-pulse"></span>
+                            <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary-500/20 text-primary-300 rounded-full text-sm font-medium mb-6 backdrop-blur-sm">
+                                <span className="w-2 h-2 bg-primary-400 rounded-full animate-pulse"></span>
                                 Premium Printing Services
                             </div>
 
-                            <h1 className="text-5xl md:text-6xl lg:text-7xl font-heading font-bold text-neutral-900 leading-tight mb-6">
+                            <h1 className="text-5xl md:text-6xl lg:text-7xl font-heading font-bold text-white leading-tight mb-6">
                                 Bring Your Ideas to{' '}
                                 <span className="gradient-text-primary">Life</span>
                             </h1>
 
-                            <p className="text-xl text-neutral-600 mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+                            <p className="text-xl text-neutral-200 mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed">
                                 Professional printing and design services that help your business stand out.
                                 From business cards to large format banners, we deliver excellence.
                             </p>
@@ -95,7 +131,7 @@ const Home = () => {
                                     href={WHATSAPP_LINK}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="inline-flex items-center justify-center gap-2 border-2 border-neutral-300 text-neutral-700 px-8 py-4 rounded-xl font-semibold text-lg hover:border-green-500 hover:text-green-500 transition-all duration-300"
+                                    className="inline-flex items-center justify-center gap-2 border-2 border-white/30 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:border-green-400 hover:text-green-400 transition-all duration-300 backdrop-blur-sm"
                                 >
                                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                                         <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
@@ -105,31 +141,31 @@ const Home = () => {
                             </div>
 
                             {/* Trust Indicators */}
-                            <div className="mt-10 pt-8 border-t border-neutral-200">
-                                <p className="text-neutral-500 text-sm mb-4">Trusted by 500+ local businesses</p>
+                            <div className="mt-10 pt-8 border-t border-white/20">
+                                <p className="text-neutral-300 text-sm mb-4">Trusted by 500+ local businesses</p>
                                 <div className="flex items-center justify-center lg:justify-start gap-4">
                                     <div className="flex -space-x-2">
                                         {[1, 2, 3, 4, 5].map((i) => (
-                                            <div key={i} className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-100 to-primary-200 border-2 border-white flex items-center justify-center text-primary-600 font-semibold text-sm">
+                                            <div key={i} className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 border-2 border-white/30 flex items-center justify-center text-white font-semibold text-sm">
                                                 {String.fromCharCode(64 + i)}
                                             </div>
                                         ))}
                                     </div>
                                     <div className="flex items-center gap-1">
-                                        <div className="flex text-accent-500">
+                                        <div className="flex text-accent-400">
                                             {[1, 2, 3, 4, 5].map((i) => (
                                                 <svg key={i} className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                                 </svg>
                                             ))}
                                         </div>
-                                        <span className="text-neutral-700 font-semibold ml-1">4.9/5</span>
+                                        <span className="text-white font-semibold ml-1">4.9/5</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Hero Image/Illustration */}
+                        {/* Hero Image/Illustration - Desktop */}
                         <div className="relative hidden lg:block animate-fade-in-up animation-delay-200">
                             <div className="relative w-full aspect-[4/3] overflow-hidden rounded-3xl shadow-soft-xl">
                                 {/* Hero Image */}
@@ -162,6 +198,37 @@ const Home = () => {
                             {/* Decorative floating element */}
                             <div className="absolute -top-6 -right-6 w-24 h-24 bg-accent-500/10 rounded-full blur-2xl animate-pulse-soft"></div>
                             <div className="absolute -bottom-4 -left-4 w-20 h-20 bg-primary-500/10 rounded-full blur-2xl animate-pulse-soft" style={{ animationDelay: '1s' }}></div>
+                        </div>
+
+                        {/* Hero Carousel - Mobile */}
+                        <div className="lg:hidden relative w-full aspect-[4/3] overflow-hidden rounded-3xl shadow-soft-xl mt-8">
+                            {heroImages.map((image, index) => (
+                                <div
+                                    key={index}
+                                    className={`absolute inset-0 transition-opacity duration-700 ${index === currentSlide ? 'opacity-100' : 'opacity-0'}`}
+                                >
+                                    <img
+                                        src={image}
+                                        alt={`Slide ${index + 1}`}
+                                        className="w-full h-full object-cover"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-neutral-900/60 via-transparent to-transparent"></div>
+                                </div>
+                            ))}
+                            {/* Slide Navigation Dots */}
+                            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2">
+                                {heroImages.map((_, index) => (
+                                    <button
+                                        key={index}
+                                        onClick={() => setCurrentSlide(index)}
+                                        className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${index === currentSlide
+                                            ? 'bg-white w-6'
+                                            : 'bg-white/50 hover:bg-white/70'
+                                            }`}
+                                        aria-label={`Go to slide ${index + 1}`}
+                                    />
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>

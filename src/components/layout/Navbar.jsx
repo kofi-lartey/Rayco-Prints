@@ -23,8 +23,8 @@ const Navbar = () => {
             className={cn(
                 'fixed top-0 left-0 right-0 z-50 transition-all duration-500',
                 isScrolled
-                    ? 'bg-white/90 backdrop-blur-lg shadow-soft'
-                    : 'bg-transparent'
+                    ? 'bg-white/95 backdrop-blur-lg shadow-soft-lg'
+                    : 'bg-neutral-900/80 backdrop-blur-md'
             )}
         >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -32,29 +32,39 @@ const Navbar = () => {
                     {/* Logo */}
                     <div className="flex-shrink-0">
                         <Link to="/" className="flex items-center gap-3 group">
-                            <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl flex items-center justify-center shadow-medium group-hover:shadow-glow-primary transition-all duration-300">
-                                <span className="text-white font-bold text-xl font-heading">R</span>
-                            </div>
+                            <img
+                                src="https://res.cloudinary.com/djjgkezui/image/upload/v1772650253/logo_krbgmz.png"
+                                alt="RaycoGraphix Logo"
+                                className="h-12 w-auto rounded-lg"
+                            />
                             <div className="hidden sm:block">
-                                <span className="font-heading font-bold text-xl text-neutral-900">
-                                    Rayco<span className="text-primary-500">Graphix</span>
+                                <span className={cn(
+                                    "font-heading font-bold text-xl",
+                                    isScrolled ? "text-neutral-900" : "text-white"
+                                )}>
+                                    Rayco<span className="text-primary-400">Graphix</span>
                                 </span>
-                                <p className="text-xs text-neutral-500 -mt-1">Print & Design</p>
+                                <p className={cn(
+                                    "text-xs -mt-1",
+                                    isScrolled ? "text-neutral-500" : "text-neutral-300"
+                                )}>Print & Design</p>
                             </div>
                         </Link>
                     </div>
 
                     {/* Desktop Navigation */}
                     <div className="hidden lg:flex items-center gap-1">
-                        {navItems.slice(0, -1).map((item) => (
+                        {navItems.map((item) => (
                             <Link
                                 key={item.path}
                                 to={item.path}
                                 className={cn(
                                     'px-4 py-2 rounded-lg font-medium transition-all duration-200 text-sm',
                                     isActive(item.path)
-                                        ? 'text-primary-500 bg-primary-50'
-                                        : 'text-neutral-600 hover:text-primary-500 hover:bg-primary-50/50'
+                                        ? 'text-primary-400 bg-primary-500/20'
+                                        : isScrolled
+                                            ? 'text-neutral-700 hover:text-primary-500 hover:bg-primary-50/50'
+                                            : 'text-white hover:text-primary-400 hover:bg-white/10'
                                 )}
                             >
                                 {item.name}
@@ -90,7 +100,12 @@ const Navbar = () => {
                     <div className="lg:hidden">
                         <button
                             onClick={() => setIsOpen(!isOpen)}
-                            className="w-10 h-10 flex items-center justify-center text-neutral-700 hover:text-primary-500 hover:bg-primary-50 rounded-lg transition-colors"
+                            className={cn(
+                                "w-10 h-10 flex items-center justify-center rounded-lg transition-colors",
+                                isScrolled
+                                    ? "text-neutral-700 hover:text-primary-500 hover:bg-primary-50"
+                                    : "text-white hover:text-primary-400 hover:bg-white/10"
+                            )}
                             aria-label="Toggle menu"
                         >
                             {isOpen ? (

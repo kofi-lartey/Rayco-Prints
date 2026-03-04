@@ -19,9 +19,11 @@ const Footer = () => {
                     {/* Brand Column */}
                     <div className="lg:col-span-2">
                         <Link to="/" className="flex items-center gap-3 mb-6">
-                            <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl flex items-center justify-center shadow-medium">
-                                <span className="text-white font-bold text-xl font-heading">R</span>
-                            </div>
+                            <img
+                                src="https://res.cloudinary.com/djjgkezui/image/upload/v1772650253/logo_krbgmz.png"
+                                alt="RaycoGraphix Logo"
+                                className="h-12 w-auto rounded-lg"
+                            />
                             <div>
                                 <span className="font-heading font-bold text-xl text-white">
                                     Rayco<span className="text-primary-500">Graphix</span>

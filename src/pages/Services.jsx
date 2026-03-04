@@ -1,12 +1,27 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Card } from '../components/ui'
 
-const WHATSAPP_LINK = "https://wa.me/233500000000"
+const WHATSAPP_LINK = "https://wa.me/233246504887"
+
+const heroImages = [
+  "https://images.unsplash.com/photo-1562564055-71e051d33c19?w=1200&h=800&fit=crop",
+  "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=1200&h=800&fit=crop",
+  "https://images.unsplash.com/photo-1551434678-e076c223a692?w=1200&h=800&fit=crop",
+  "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=1200&h=800&fit=crop"
+]
 
 const Services = () => {
   const [selectedService, setSelectedService] = useState(null)
+  const [currentSlide, setCurrentSlide] = useState(0)
   const navigate = useNavigate()
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % heroImages.length)
+    }, 4000)
+    return () => clearInterval(timer)
+  }, [])
 
   const services = [
     {
@@ -166,21 +181,43 @@ const Services = () => {
 
   const handleWhatsAppClick = (service) => {
     const message = `Hi Rayco Graphix, I'm interested in ${service.title}. Can you give me a quote?`
-    window.open(`https://wa.me/233500000000?text=${encodeURIComponent(message)}`, '_blank')
+    window.open(`https://wa.me/233246504887?text=${encodeURIComponent(message)}`, '_blank')
   }
 
   return (
     <div className="min-h-screen pt-20">
       {/* Header */}
-      <section className="py-20 bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `radial-gradient(circle at 1px 1px, white 1px, transparent 0)`,
-            backgroundSize: '30px 30px'
-          }}></div>
+      <section className="py-20 relative overflow-hidden">
+        {/* Background Carousel */}
+        <div className="absolute inset-0">
+          {heroImages.map((image, index) => (
+            <div
+              key={index}
+              className={`absolute inset-0 transition-opacity duration-1000 ${index === currentSlide ? 'opacity-100' : 'opacity-0'}`}
+            >
+              <img
+                src={image}
+                alt={`Slide ${index + 1}`}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-primary-900/80"></div>
+            </div>
+          ))}
+          {/* Slide Navigation Dots */}
+          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-3 z-10">
+            {heroImages.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentSlide(index)}
+                className={`h-2 rounded-full transition-all duration-300 ${index === currentSlide
+                    ? 'bg-white w-8'
+                    : 'bg-white/40 hover:bg-white/60 w-2'
+                  }`}
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            ))}
+          </div>
         </div>
-        <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-80 h-80 bg-accent-500/20 rounded-full blur-3xl"></div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="text-center">
