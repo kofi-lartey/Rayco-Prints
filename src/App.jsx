@@ -26,33 +26,45 @@ const ScrollToTop = () => {
 }
 
 /**
+ * AppContent Component
+ * Contains the main layout with access to location for loader
+ */
+const AppContent = () => {
+  const { pathname } = useLocation()
+
+  return (
+    <>
+      <LogoLoader pathname={pathname} />
+      <ScrollToTop />
+      <div className="min-h-screen flex flex-col">
+        <Navbar />
+        <main className="flex-grow">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/portfolio" element={<Portfolio />} />
+            <Route path="/order" element={<Order />} />
+            <Route path="/success" element={<Success />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/terms-of-service" element={<TermsOfService />} />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
+    </>
+  )
+}
+
+/**
  * Main App Component
  * Sets up routing and layout structure
  */
 function App() {
   return (
-    <>
-      <LogoLoader />
-      <Router>
-        <ScrollToTop />
-        <div className="min-h-screen flex flex-col">
-          <Navbar />
-          <main className="flex-grow">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/services" element={<Services />} />
-              <Route path="/portfolio" element={<Portfolio />} />
-              <Route path="/order" element={<Order />} />
-              <Route path="/success" element={<Success />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-              <Route path="/terms-of-service" element={<TermsOfService />} />
-            </Routes>
-          </main>
-          <Footer />
-        </div>
-      </Router>
-    </>
+    <Router>
+      <AppContent />
+    </Router>
   )
 }
 
