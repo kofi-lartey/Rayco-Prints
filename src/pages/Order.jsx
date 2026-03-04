@@ -496,22 +496,22 @@ ${formData.message}`
     const showNB = isPhotocopy
 
     return (
-        <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-2xl mx-auto">
+        <div className="min-h-screen pt-24 pb-16 bg-gradient-to-b from-neutral-50 to-white">
+            <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Header */}
                 <div className="text-center mb-10">
-                    <h1 className="text-3xl font-bold text-gray-900 mb-2">Place Your Order</h1>
-                    <p className="text-gray-600">Fill in the details below and we'll get started on your order</p>
+                    <h1 className="text-3xl md:text-4xl font-heading font-bold text-neutral-900 mb-2">Place Your Order</h1>
+                    <p className="text-neutral-600">Fill in the details below and we'll get started on your order</p>
                 </div>
 
                 {/* Netlify Forms hidden input */}
                 <input type="hidden" name="form-name" value="orders" />
 
-                <form onSubmit={handleSubmit} data-netlify="true" className="bg-white shadow-lg rounded-lg p-8 space-y-6">
+                <form onSubmit={handleSubmit} data-netlify="true" className="bg-white rounded-2xl shadow-soft-lg border border-neutral-100 p-8 space-y-6">
                     {/* Selected Service Display */}
                     {formData.service && (
-                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                            <p className="text-sm text-blue-800">
+                        <div className="bg-primary-50 border border-primary-200 rounded-xl p-4">
+                            <p className="text-sm text-primary-800">
                                 <strong>Selected Service:</strong> {formData.service}
                                 {formData.item && <> - {formData.item}</>}
                             </p>
@@ -649,7 +649,7 @@ ${formData.message}`
 
                     {/* NB Note for Photocopy */}
                     {showNB && (
-                        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
+                        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-xl">
                             <div className="flex">
                                 <div className="ml-3">
                                     <p className="text-sm text-yellow-700">

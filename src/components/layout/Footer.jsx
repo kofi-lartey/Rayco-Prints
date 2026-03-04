@@ -4,7 +4,7 @@ import { getCurrentYear } from '../../utils'
 
 /**
  * Footer Component
- * Site footer with brand info, links, and social media
+ * Modern, elegant footer with brand info, links, and social media
  */
 const Footer = () => {
     const { brand, contact, navItems, services } = CONFIG
@@ -12,28 +12,57 @@ const Footer = () => {
     const currentYear = getCurrentYear()
 
     return (
-        <footer className="bg-rayco-forest text-white py-16">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="grid md:grid-cols-4 gap-8 mb-12">
-                    {/* Brand */}
-                    <div className="md:col-span-2">
-                        <div className="flex items-center space-x-2 mb-4">
-                            <div className="w-12 h-12 bg-rayco-gold rounded-lg flex items-center justify-center">
-                                <span className="text-rayco-forest font-bold text-xl">R</span>
+        <footer className="bg-neutral-900 text-neutral-300">
+            {/* Main Footer */}
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12">
+                    {/* Brand Column */}
+                    <div className="lg:col-span-2">
+                        <Link to="/" className="flex items-center gap-3 mb-6">
+                            <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl flex items-center justify-center shadow-medium">
+                                <span className="text-white font-bold text-xl font-heading">R</span>
                             </div>
-                            <span className="font-bold text-2xl">
-                                {brand.name.split(' ')[0]}<span className="text-rayco-gold">Graphix</span>
-                            </span>
-                        </div>
-                        <p className="text-white/80 mb-6 max-w-md">
+                            <div>
+                                <span className="font-heading font-bold text-xl text-white">
+                                    Rayco<span className="text-primary-500">Graphix</span>
+                                </span>
+                                <p className="text-xs text-neutral-500 -mt-1">Print & Design</p>
+                            </div>
+                        </Link>
+                        <p className="text-neutral-400 mb-6 max-w-md leading-relaxed">
                             {brand.description}
                         </p>
-                        <div className="flex space-x-4">
+
+                        {/* Contact Info */}
+                        <div className="space-y-3 mb-6">
+                            <div className="flex items-center gap-3 text-neutral-400">
+                                <svg className="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                                </svg>
+                                <span>{contact.phone}</span>
+                            </div>
+                            <div className="flex items-center gap-3 text-neutral-400">
+                                <svg className="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                </svg>
+                                <span>{contact.email}</span>
+                            </div>
+                            <div className="flex items-center gap-3 text-neutral-400">
+                                <svg className="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                                <span>{contact.address}</span>
+                            </div>
+                        </div>
+
+                        {/* Social Links */}
+                        <div className="flex gap-3">
                             <a
                                 href={contact.whatsapp}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="w-10 h-10 bg-rayco-sage rounded-full flex items-center justify-center text-white hover:bg-green-500 transition-colors"
+                                className="w-10 h-10 bg-neutral-800 rounded-xl flex items-center justify-center text-neutral-400 hover:bg-green-500 hover:text-white transition-all duration-300"
                                 aria-label="WhatsApp"
                             >
                                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -42,7 +71,7 @@ const Footer = () => {
                             </a>
                             <a
                                 href={`mailto:${contact.email}`}
-                                className="w-10 h-10 bg-rayco-sage rounded-full flex items-center justify-center text-white hover:text-rayco-sky transition-colors"
+                                className="w-10 h-10 bg-neutral-800 rounded-xl flex items-center justify-center text-neutral-400 hover:bg-primary-500 hover:text-white transition-all duration-300"
                                 aria-label="Email"
                             >
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -54,13 +83,13 @@ const Footer = () => {
 
                     {/* Quick Links */}
                     <div>
-                        <h4 className="font-bold text-lg mb-4 text-rayco-gold">Quick Links</h4>
-                        <ul className="space-y-2">
+                        <h4 className="font-heading font-semibold text-white text-lg mb-6">Quick Links</h4>
+                        <ul className="space-y-3">
                             {navItems.map((item) => (
                                 <li key={item.path}>
                                     <Link
                                         to={item.path}
-                                        className="text-white/80 hover:text-rayco-gold transition-colors"
+                                        className="text-neutral-400 hover:text-primary-500 transition-colors duration-200"
                                     >
                                         {item.name}
                                     </Link>
@@ -71,13 +100,13 @@ const Footer = () => {
 
                     {/* Services */}
                     <div>
-                        <h4 className="font-bold text-lg mb-4 text-rayco-gold">Services</h4>
-                        <ul className="space-y-2">
-                            {services.slice(0, 5).map((service) => (
+                        <h4 className="font-heading font-semibold text-white text-lg mb-6">Services</h4>
+                        <ul className="space-y-3">
+                            {services.slice(0, 6).map((service) => (
                                 <li key={service.id}>
                                     <Link
                                         to="/services"
-                                        className="text-white/80 hover:text-rayco-gold transition-colors"
+                                        className="text-neutral-400 hover:text-primary-500 transition-colors duration-200"
                                     >
                                         {service.name}
                                     </Link>
@@ -86,11 +115,20 @@ const Footer = () => {
                         </ul>
                     </div>
                 </div>
+            </div>
 
-                <div className="border-t border-rayco-sage pt-8 text-center">
-                    <p className="text-white/60">
-                        © {currentYear} {brand.fullName}. All rights reserved.
-                    </p>
+            {/* Bottom Bar */}
+            <div className="border-t border-neutral-800">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                    <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+                        <p className="text-neutral-500 text-sm">
+                            © {currentYear} {brand.fullName}. All rights reserved.
+                        </p>
+                        <div className="flex items-center gap-6 text-sm text-neutral-500">
+                            <span className="hover:text-primary-500 cursor-pointer transition-colors">Privacy Policy</span>
+                            <span className="hover:text-primary-500 cursor-pointer transition-colors">Terms of Service</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </footer>

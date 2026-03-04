@@ -3,18 +3,41 @@ import { cn } from '../../utils'
 
 /**
  * Card Component
- * Reusable card container with header, title, description, content, and footer
+ * Modern, elegant card container with multiple variants
  */
 const Card = forwardRef(({
     children,
     className,
+    variant = 'default',
+    hover = false,
+    padding = 'default',
     ...props
 }, ref) => {
+    const variants = {
+        default: 'bg-white rounded-2xl shadow-soft border border-neutral-100',
+        elevated: 'bg-white rounded-2xl shadow-medium-lg border border-neutral-100',
+        outlined: 'bg-white rounded-2xl border-2 border-neutral-200',
+        ghost: 'bg-neutral-50 rounded-2xl border border-neutral-100',
+        dark: 'bg-neutral-900 rounded-2xl border border-neutral-800',
+    }
+
+    const paddings = {
+        none: '',
+        sm: 'p-4',
+        default: 'p-6',
+        lg: 'p-8',
+        xl: 'p-10',
+    }
+
+    const hoverStyles = hover && 'transition-all duration-300 hover:shadow-soft-lg hover:-translate-y-1 cursor-pointer'
+
     return (
         <div
             ref={ref}
             className={cn(
-                'bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden',
+                variants[variant],
+                paddings[padding],
+                hoverStyles,
                 className
             )}
             {...props}
@@ -37,7 +60,7 @@ const CardHeader = forwardRef(({
     return (
         <div
             ref={ref}
-            className={cn('px-6 py-4 border-b border-slate-200', className)}
+            className={cn('px-6 py-4 border-b border-neutral-100', className)}
             {...props}
         >
             {children}
@@ -53,16 +76,17 @@ CardHeader.displayName = 'CardHeader'
 const CardTitle = forwardRef(({
     children,
     className,
+    as: Component = 'h3',
     ...props
 }, ref) => {
     return (
-        <h3
+        <Component
             ref={ref}
-            className={cn('text-xl font-semibold text-slate-900', className)}
+            className={cn('text-xl font-heading font-semibold text-neutral-900', className)}
             {...props}
         >
             {children}
-        </h3>
+        </Component>
     )
 })
 
@@ -79,7 +103,7 @@ const CardDescription = forwardRef(({
     return (
         <p
             ref={ref}
-            className={cn('mt-1 text-sm text-slate-500', className)}
+            className={cn('mt-1 text-sm text-neutral-500', className)}
             {...props}
         >
             {children}
@@ -116,12 +140,19 @@ CardContent.displayName = 'CardContent'
 const CardFooter = forwardRef(({
     children,
     className,
+    align = 'left',
     ...props
 }, ref) => {
+    const alignments = {
+        left: 'justify-start',
+        center: 'justify-center',
+        right: 'justify-end',
+    }
+
     return (
         <div
             ref={ref}
-            className={cn('px-6 py-4 bg-slate-50 border-t border-slate-200', className)}
+            className={cn('px-6 py-4 bg-neutral-50 border-t border-neutral-100 flex', alignments[align], className)}
             {...props}
         >
             {children}
