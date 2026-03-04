@@ -106,11 +106,14 @@ const getEmailHtml = (data) => {
 
 exports.handler = async function (event) {
   try {
+    // Parse order data from request
     const {
       name,
       email,
       phone,
       service,
+      item,
+      side,
       color,
       pages,
       quantity,
@@ -118,6 +121,16 @@ exports.handler = async function (event) {
       fileUrl,
       message
     } = JSON.parse(event.body);
+
+    // Determine file type flags for EmailJS template conditionals
+    const fileExtension = fileUrl ? fileUrl.split('.').pop().toLowerCase() : '';
+    const isImage = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'].includes(fileExtension);
+    const isPDF = fileExtension === 'pdf';
+
+    // Calculate expiry date (7 days from now)
+    const expiryDate = new Date();
+    expiryDate.setDate(expiryDate.getDate() + 7);
+    const expiry_date = expiryDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 
     // Check if credentials are configured
     if (EMAILJS_TEMPLATE_ID === 'your_template_id_here' || EMAILJS_USER_ID === 'your_user_id_here') {
@@ -131,16 +144,24 @@ exports.handler = async function (event) {
       };
     }
 
-    // Prepare template parameters
+    // Prepare template parameters - ensure all variables have valid strings
     const templateParams = {
-      from_name: name,
-      from_email: email,
+      from_name: name || 'Customer',
+      from_email: email || 'Not provided',
       phone: phone || 'Not provided',
       service: service || 'Not specified',
+      item: item || 'Not specified',
+      side: side || 'Not specified',
+      color: color || 'Not specified',
+      pages: pages || '1',
       quantity: quantity || '1',
       total_price: totalPrice || '0.00',
       message: message || 'No message',
-      file_url: fileUrl || 'No file attached'
+      file_url: fileUrl || '',
+      has_file: fileUrl ? 'true' : 'false',
+      expiry_date: expiry_date,
+      isImage: isImage ? 'true' : 'false',
+      isPDF: isPDF ? 'true' : 'false'
     };
 
     // Send email using EmailJS HTTP API

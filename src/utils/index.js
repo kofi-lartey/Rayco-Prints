@@ -105,3 +105,82 @@ export const cn = (...args) => {
         .join(' ')
         .trim()
 }
+
+/**
+ * Detect file type from URL
+ * @param {string} fileUrl - URL of the file
+ * @returns {object} - Object with isImage and isPDF flags
+ */
+export const detectFileType = (fileUrl) => {
+    const fileExtension = fileUrl ? fileUrl.split('.').pop().toLowerCase() : '';
+    const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'];
+    return {
+        isImage: imageExtensions.includes(fileExtension),
+        isPDF: fileExtension === 'pdf'
+    };
+}
+
+/**
+ * Send order email using EmailJS
+ * @param {object} config - EmailJS configuration
+ * @param {string} config.serviceId - EmailJS service ID
+ * @param {string} config.templateId - EmailJS template ID
+ * @param {string} config.publicKey - EmailJS public key
+ * @param {object} orderData - Order data to send
+ * @param {string} orderData.clientName - Client's name
+ * @param {string} orderData.clientEmail - Client's email
+ * @param {string} orderData.clientPhone - Client's phone
+ * @param {string} orderData.service - Service type
+ * @param {string} orderData.item - Item/specific option
+ * @param {string} orderData.side - Side (Front/Front & Back)
+ * @param {string} orderData.color - Color option
+ * @param {number|string} orderData.pages - Number of pages
+ * @param {number|string} orderData.quantity - Quantity
+ * @param {number|string} orderData.totalPrice - Total price
+ * @param {string} orderData.fileUrl - Uploaded file URL
+ * @param {string} orderData.message - Additional message
+ * @returns {Promise} - EmailJS send promise
+ */
+export const sendOrderEmail = async (config, orderData) => {
+    const { serviceId, templateId, publicKey } = config
+
+    // Validate config
+    if (!serviceId || !templateId || !publicKey) {
+        throw new Error('EmailJS configuration is missing')
+    }
+
+    // Get file info from Cloudinary response
+    const { format, resourceType } = orderData.fileInfo || { format: '', resourceType: '' }
+
+    // Calculate expiry date (7 days from now)
+    const expiryDate = new Date()
+    expiryDate.setDate(expiryDate.getDate() + 7)
+    const expiry_date = expiryDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+
+    // Generate order ID
+    const orderId = 'ORD-' + Date.now().toString(36).toUpperCase()
+
+    // Prepare template parameters - keep all values as strings for EmailJS compatibility
+    const templateParams = {
+        from_name: orderData.clientName || 'No Name',
+        phone: orderData.clientPhone || 'Not provided',
+        from_email: orderData.clientEmail || 'Not provided',
+        service: orderData.service || 'Not specified',
+        item: orderData.item || 'Not specified',
+        side: orderData.side || 'Not specified',
+        color: orderData.color || 'Not specified',
+        pages: String(orderData.pages || 0),
+        quantity: String(orderData.quantity || 1),
+        total_price: String(orderData.totalPrice || 0),
+        file_url: orderData.fileUrl || '',
+        file_format: (orderData.fileInfo?.format) || 'Unknown',
+        resource_type: (orderData.fileInfo?.resourceType) || 'Unknown',
+        message: orderData.message || 'No message',
+        expiry_date: expiry_date,
+        order_id: orderId
+    }
+
+    // Dynamically import emailjs to avoid issues if not installed
+    const emailjs = await import('@emailjs/browser')
+    return emailjs.send(serviceId, templateId, templateParams, publicKey)
+}

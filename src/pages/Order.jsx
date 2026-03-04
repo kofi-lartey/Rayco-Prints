@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import emailjs from '@emailjs/browser'
 import { Input, Button, Select, Textarea } from '../components/ui'
 import { CONFIG } from '../config'
+import { sendOrderEmail } from '../utils'
 
 export default function Order() {
     const [searchParams] = useSearchParams()
@@ -35,6 +35,7 @@ export default function Order() {
     const [uploadProgress, setUploadProgress] = useState(0)
     const [filePreview, setFilePreview] = useState(null)
     const [isFileUploaded, setIsFileUploaded] = useState(false)
+    const [fileInfo, setFileInfo] = useState({ format: '', resourceType: '' })
 
     // Check if it's a photocopy service
     const isPhotocopy = formData.service?.toLowerCase().includes('photocopy') || formData.service === 'Photocopy'
@@ -198,7 +199,6 @@ export default function Order() {
         formDataCloud.append('file', file)
         formDataCloud.append('upload_preset', uploadPreset)
         formDataCloud.append('resource_type', 'auto')
-        formDataCloud.append('type', 'upload')
 
         try {
             const response = await fetch(
@@ -211,9 +211,22 @@ export default function Order() {
 
             const data = await response.json()
 
+            console.log('Cloudinary response status:', response.status)
+            console.log('Cloudinary response:', data)
+
+            if (!response.ok) {
+                alert(`Upload failed: ${data.error?.message || 'Unknown error'}`)
+                return
+            }
+
             if (data.secure_url) {
                 setUploadedFileUrl(data.secure_url)
                 setUploadProgress(100)
+                // Store file info from Cloudinary response
+                setFileInfo({
+                    format: data.format || '',
+                    resourceType: data.resource_type || ''
+                })
                 // Keep local file preview - Cloudinary URLs may require authentication to view
                 // The uploaded URL is still saved and sent with the form
             }
@@ -279,29 +292,25 @@ ${formData.message}`
         }
 
         try {
-            // Prepare template parameters for EmailJS
-            const templateParams = {
-                from_name: formData.name,
-                from_email: formData.email,
-                phone: formData.phone || 'Not provided',
-                service: formData.service || 'Not specified',
-                item: formData.item || 'Not specified',
-                side: formData.side || 'Not specified',
-                color: formData.color || 'Not specified',
-                pages: formData.pages || '1',
-                quantity: formData.quantity || '1',
-                total_price: formData.totalPrice || '0.00',
-                message: formData.message || 'No message',
-                file_url: uploadedFileUrl || 'No file attached'
+            // Prepare order data in the format expected by sendOrderEmail
+            const orderData = {
+                clientName: formData.name,
+                clientEmail: formData.email,
+                clientPhone: formData.phone,
+                service: formData.service,
+                item: formData.item,
+                side: formData.side,
+                color: formData.color,
+                pages: formData.pages,
+                quantity: formData.quantity,
+                totalPrice: formData.totalPrice,
+                fileUrl: uploadedFileUrl,
+                fileInfo: fileInfo,
+                message: formData.message
             }
 
-            // Send email directly using EmailJS
-            await emailjs.send(
-                emailConfig.serviceId,
-                emailConfig.templateId,
-                templateParams,
-                emailConfig.publicKey
-            )
+            // Send email using the utility function
+            await sendOrderEmail(emailConfig, orderData)
 
             setSubmitStatus('success')
             navigate('/success')
@@ -336,6 +345,7 @@ ${formData.message}`
             setUploadedFileUrl('')
             setFilePreview(null)
             setIsFileUploaded(false)
+            setFileInfo({ format: '', resourceType: '' })
             setFormData({
                 name: '',
                 email: '',
