@@ -58,7 +58,7 @@ const Home = () => {
         { icon: "🖨️", title: "Printing", desc: "High-quality digital & offset printing", image: "https://i.pinimg.com/1200x/26/04/ca/2604cad5d3e50901a4b4f849bd0b1ae1.jpg" },
         { icon: "📇", title: "Business Cards", desc: "Premium cards that make an impact", image: "https://i.pinimg.com/736x/8d/36/46/8d36465fee3caa4147030012fd52c4d7.jpg" },
         { icon: "📜", title: "Banners", desc: "Large format for maximum visibility", image: "https://i.pinimg.com/736x/f6/c8/61/f6c861732047a947f1dbbdefa77186e3.jpg" },
-        { icon: "👕", title: "Custom Apparel", desc: "Branded merchandise that stands out", image: "https://i.pinimg.com/736x/ec/87/e0/ec87e0ccccddf4d306069243d34c5a2f.jpg" }
+        { icon: "👕", title: "T-Shirts and Jersey", desc: "Branded merchandise that stands out", image: "https://i.pinimg.com/736x/ec/87/e0/ec87e0ccccddf4d306069243d34c5a2f.jpg" }
     ]
 
     return (

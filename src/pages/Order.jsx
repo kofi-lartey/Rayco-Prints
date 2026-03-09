@@ -71,6 +71,7 @@ export default function Order() {
     // Check if it's a photocopy service
     const isPhotocopy = formData.service?.toLowerCase().includes('photocopy') || formData.service === 'Photocopy'
     const isPrinting = formData.service?.toLowerCase().includes('printing') || formData.service === 'Printing'
+    const isTshirts = formData.service?.toLowerCase().includes('t-shirts') || formData.service === 'T-Shirts and Jersey'
 
     // Determine color and side from item name if price was passed
     useEffect(() => {
@@ -633,7 +634,7 @@ ${formData.message}`
                             <option value="Laminating">Laminating</option>
                             <option value="Envelope Printing">Envelope Printing</option>
                             <option value="DTF Printing">DTF Printing</option>
-                            <option value="Custom Apparel">Custom Apparel</option>
+                            <option value="T-Shirts and Jersey">T-Shirts and Jersey</option>
                             <option value="Picture Frames">Picture Frames</option>
                             <option value="Graphic Design">Graphic Design</option>
                             <option value="Generator Rates">Generator Rates</option>
@@ -1021,7 +1022,7 @@ ${formData.message}`
                     )}
 
                     {/* File Preview Section */}
-                    {uploadedFile && !isSecretarial && (
+                    {uploadedFile && !isSecretarial && !isTshirts && (
                         <div className="bg-blue-50 border-2 border-blue-400 rounded-lg p-6">
                             <div className="flex items-center justify-between mb-4">
                                 <h3 className="text-lg font-bold text-blue-900">📎 File Preview</h3>

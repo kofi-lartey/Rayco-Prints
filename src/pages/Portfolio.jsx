@@ -82,7 +82,7 @@ const Portfolio = () => {
             image: "https://i.pinimg.com/736x/f6/c8/61/f6c861732047a947f1dbbdefa77186e3.jpg"
         },
         {
-            category: "Custom Apparel",
+            category: "T-Shirts and Jersey",
             color: "from-accent-500 to-accent-600",
             projects: 200,
             icon: "👕",

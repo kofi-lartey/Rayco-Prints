@@ -53,7 +53,7 @@ export const CONFIG = {
         { id: 'laminating', name: 'Laminating', icon: '🃏' },
         { id: 'envelope', name: 'Envelope Printing', icon: '✉️' },
         { id: 'dtf', name: 'DTF Printing', icon: '🎨' },
-        { id: 'apparel', name: 'Custom Apparel', icon: '👕' },
+        { id: 'apparel', name: 'T-Shirts and Jersey', icon: '👕' },
         { id: 'frames', name: 'Picture Frames', icon: '🖼️' },
         { id: 'design', name: 'Graphic Design', icon: '🎯' }
     ],

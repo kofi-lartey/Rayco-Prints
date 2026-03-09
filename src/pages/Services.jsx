@@ -109,6 +109,7 @@ const Services = () => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
         </svg>
       ),
+      note: 'Visit the shop to take your head shot or upload a picture you want to be used for passport.',
       pricing: [
         { item: 'Passport (4 copies)', price: 'GHC 15.00' },
         { item: 'Passport (6 copies)', price: 'GHC 20.00' },
@@ -126,6 +127,7 @@ const Services = () => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
         </svg>
       ),
+      note: 'Visit the shop with your documents for laminating. If sending digitally, documents will be printed first before laminating (additional printing fees may apply).',
       pricing: [
         { item: 'ID Card/A5', price: 'GHC 5.00' },
         { item: 'A4', price: 'GHC 5.00' },
@@ -134,7 +136,7 @@ const Services = () => {
     },
     {
       id: 'apparel',
-      title: 'Custom Apparel',
+      title: 'T-Shirts and Jersey',
       description: 'Custom printed T-shirts and jersey customization',
       image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=300&fit=crop',
       icon: (
@@ -271,7 +273,12 @@ const Services = () => {
                   <p className="text-neutral-600 text-sm mb-4">{service.description}</p>
 
                   {/* Expandable Pricing */}
-                  <div className={`overflow-hidden transition-all duration-500 ${selectedService === service.id ? 'max-h-[400px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                  <div className={`overflow-hidden transition-all duration-500 ${selectedService === service.id ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                    {service.note && (
+                      <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                        <p className="text-xs text-yellow-800">{service.note}</p>
+                      </div>
+                    )}
                     <div className="border-t border-neutral-200 pt-4 mt-4">
                       <h4 className="font-heading font-semibold text-neutral-900 mb-3 text-sm">Pricing</h4>
                       <div className="space-y-2 max-h-48 overflow-y-auto">
