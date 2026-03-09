@@ -143,9 +143,12 @@ const Services = () => {
         </svg>
       ),
       pricing: [
-        { item: 'T-Shirt - Jersey', price: 'GHC 45.00' },
-        { item: 'T-Shirt - Cotton', price: 'GHC 55.00' },
-        { item: 'T-Shirt - Lacoste', price: 'GHC 70.00' },
+        { item: 'T-Shirt - Jersey (Dozen)', price: 'GHC 19.00' },
+        { item: 'T-Shirt - Jersey (Single)', price: 'GHC 23.00' },
+        { item: 'T-Shirt - Vicyao Cotton (Dozen)', price: 'GHC 27.00' },
+        { item: 'T-Shirt - Vicyao Cotton (Single)', price: 'GHC 30.00' },
+        { item: 'T-Shirt - Mr Tan Lacoste (Dozen)', price: 'GHC 33.00' },
+        { item: 'T-Shirt - Mr Tan Lacoste (Single)', price: 'GHC 33.00' },
         { item: 'Jersey Name Only', price: 'GHC 15.00' },
         { item: 'Jersey Name & Number', price: 'GHC 35.00' },
       ]
