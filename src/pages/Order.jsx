@@ -796,7 +796,8 @@ ${formData.message}`
                     </div>
 
                     {/* File Upload or Voice Recording */}
-                    {isSecretarial ? (
+                    {!isTshirts && (
+                    isSecretarial ? (
                         // Voice Recording + File Upload for Secretarial Services
                         <div className="space-y-6">
                             {/* Voice Recording Section */}
@@ -1019,7 +1020,7 @@ ${formData.message}`
                                 </div>
                             </div>
                         </div>
-                    )}
+                    ))}
 
                     {/* File Preview Section */}
                     {uploadedFile && !isSecretarial && !isTshirts && (
