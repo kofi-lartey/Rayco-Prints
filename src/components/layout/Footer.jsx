@@ -126,6 +126,9 @@ const Footer = () => {
                         <p className="text-neutral-500 text-sm">
                             © {currentYear} {brand.fullName}. All rights reserved.
                         </p>
+                        <p className="text-neutral-500 text-sm">
+                            Designed by kofiLartey +233557655008
+                        </p>
                         <div className="flex items-center gap-6 text-sm text-neutral-500">
                             <Link to="/privacy-policy" className="hover:text-primary-500 transition-colors">Privacy Policy</Link>
                             <Link to="/terms-of-service" className="hover:text-primary-500 transition-colors">Terms of Service</Link>
