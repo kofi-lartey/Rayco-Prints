@@ -274,7 +274,7 @@ exports.handler = async function (event) {
       ? `Contact Form: ${name} - ${(message?.split('\n\n')[0] || 'New message').substring(0, 50)}`
       : `New Order: ${service || 'Printing Service'} - GHC ${totalPrice || '0.00'}`;
 
-    // Initialize nodemailer with Mailjet SMTP
+    // Send email using nodemailer with Mailjet SMTP
     const nodemailer = require('nodemailer');
     
     // Log API key first few chars for debugging
@@ -291,16 +291,20 @@ exports.handler = async function (event) {
       }
     });
 
-    // Send email
-    const result = await transporter.sendMail({
-      from: 'Rayco Prints <raycoprints@gmail.com>',
-      to: RECIPIENT_EMAIL,
-      replyTo: email,
+    // Send email to admin (you)
+    // Show customer's name as sender
+    const adminMailOptions = {
+      from: `${name || 'Customer'} <raycoprints@gmail.com>`,
+      to: RECIPIENT_EMAIL, // Your email (raycoprints@gmail.com)
+      replyTo: email, // Customer's email so you can reply directly
       subject: emailSubject,
       html: emailHtml
-    });
+    };
 
-    console.log('Email sent:', result.messageId);
+    // Send the email
+    const adminResult = await transporter.sendMail(adminMailOptions);
+
+    console.log('Email sent to admin:', adminResult.messageId);
 
     return {
       statusCode: 200,
