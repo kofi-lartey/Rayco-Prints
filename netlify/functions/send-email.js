@@ -66,27 +66,34 @@ const getAdminEmailHtml = (data) => {
                   </td>
                 </tr>
               </table>
-              ${data.fileUrl ? `
+              
+              {/* Voice Recording - shows if there's a voice note */}
+              ${data.voiceUrl ? `
               <div style="background:#f8f9fa;border-radius:12px;padding:20px;margin-top:25px;border:1px solid #edf0f2;text-align:center;">
-                <p style="margin:0 0 5px 0;font-size:11px;color:#777;font-weight:700;text-transform:uppercase;">File</p>
-                <a href="${data.fileUrl}" target="_blank" style="background:#007bff;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:700;display:inline-block;margin-bottom:5px;">View File</a>
-                ${data.voiceUrl ? `
-                <div style="background:#ffffff; border-radius:50px; padding:12px 20px; margin-top:20px; border:1px solid #eee; display:block;">
-                  <table width="100%" cellspacing="0" cellpadding="0">
+                <p style="margin:0 0 5px 0;font-size:11px;color:#777;font-weight:700;text-transform:uppercase;">Voice Note</p>
+                <div style="background:#ffffff; border-radius:50px; padding:12px 20px; margin-top:10px; border:1px solid #eee; display:inline-block;">
+                  <table cellspacing="0" cellpadding="0">
                     <tr>
                       <td width="30" valign="middle">
                         <a href="${data.voiceUrl}" target="_blank" style="text-decoration:none; font-size:22px;">▶️</a>
                       </td>
                       <td align="left" valign="middle" style="padding-left:10px;">
-                        <p style="margin:0; font-size:12px; color:#666; font-weight:600;">Voice Note Recording</p>
+                        <p style="margin:0; font-size:12px; color:#666; font-weight:600;">Play Voice Note</p>
                       </td>
-                      <td align="right" valign="middle">
+                      <td align="right" valign="middle" style="padding-left:15px;">
                         <a href="${data.voiceUrl}" target="_blank" style="background:#007bff; color:#ffffff; padding:6px 14px; border-radius:20px; font-size:11px; font-weight:700; text-transform:uppercase;">Play</a>
                       </td>
                     </tr>
                   </table>
                 </div>
-                ` : ''}
+              </div>
+              ` : ''}
+              
+              {/* File Upload - shows if there's a file */}
+              ${data.fileUrl ? `
+              <div style="background:#f8f9fa;border-radius:12px;padding:20px;margin-top:25px;border:1px solid #edf0f2;text-align:center;">
+                <p style="margin:0 0 5px 0;font-size:11px;color:#777;font-weight:700;text-transform:uppercase;">File</p>
+                <a href="${data.fileUrl}" target="_blank" style="background:#007bff;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:700;display:inline-block;margin-bottom:5px;">View File</a>
               </div>
               ` : ''}
               ${data.message ? `
