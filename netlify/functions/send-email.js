@@ -527,7 +527,7 @@ exports.handler = async function (event) {
     // Send confirmation email to customer - WITH payment details
     const customerMailOptions = {
       from: 'Rayco Prints <raycoprints@gmail.com>',
-      to: 'kofilartey12@gmail.com', // Customer receives confirmation with payment info
+      to: email, // Customer's email from the order form
       subject: isContactForm ? `Re: ${emailSubject}` : `Order Confirmed - GHC ${totalPrice || '0.00'}`,
       html: customerEmailHtml
     };
