@@ -433,37 +433,6 @@ export default function Order() {
             timestamp: new Date().toISOString()
         }
 
-        // Check if EmailJS is configured
-        if (emailConfig.serviceId === 'YOUR_SERVICE_ID' ||
-            emailConfig.templateId === 'YOUR_TEMPLATE_ID' ||
-            emailConfig.publicKey === 'YOUR_PUBLIC_KEY') {
-            // Fallback to mailto if not configured
-            const subject = `New Order: ${formData.name} - ${formData.service}`
-            const body = `NEW ORDER - Rayco Prints
-
-CLIENT DETAILS
-Name: ${formData.name}
-Email: ${formData.email}
-Phone: ${formData.phone}
-
-SERVICE
-Service: ${formData.service}
-Item: ${formData.item}
-Color: ${formData.color}
-Pages: ${formData.pages}
-Quantity: ${formData.quantity}
-
-TOTAL: GHC ${formData.totalPrice}
-
-MESSAGE:
-${formData.message}`
-            window.location.href = `mailto:${contact.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
-            setSubmitStatus('success')
-            navigate('/success')
-            setIsSubmitting(false)
-            return
-        }
-
         try {
             // Prepare order data in the format expected by sendOrderEmail
             const orderData = {
@@ -489,7 +458,7 @@ ${formData.message}`
             setSubmitStatus('success')
             navigate('/success')
         } catch (emailError) {
-            console.error('EmailJS Error:', emailError)
+            console.error('Email sending Error:', emailError)
             // Fallback to mailto on error
             const subject = `New Order: ${formData.name} - ${formData.service}`
             const body = `NEW ORDER - Rayco Prints
