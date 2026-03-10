@@ -3,11 +3,6 @@
   command = "npm run build"
 
 [[redirects]]
-  from = "/.netlify/functions/*"
-  to = "/.netlify/functions/:splat"
-  status = 200
-
-[[redirects]]
   from = "/manifest.json"
   to = "/manifest.json"
   status = 200
