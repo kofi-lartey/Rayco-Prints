@@ -182,6 +182,39 @@ export default function Order() {
             return total.toFixed(2)
         }
 
+        // T-Shirts and Jersey pricing
+        if (isTshirts && qty > 0) {
+            // Get the selected item
+            const item = formData.item || ''
+            
+            // T-Shirt pricing from Services.jsx
+            let itemPrice = 0
+            
+            if (item.includes('Jersey (Dozen)')) {
+                itemPrice = 19.00
+            } else if (item.includes('Jersey (Single)')) {
+                itemPrice = 23.00
+            } else if (item.includes('Vicyao Cotton (Dozen)')) {
+                itemPrice = 27.00
+            } else if (item.includes('Vicyao Cotton (Single)')) {
+                itemPrice = 30.00
+            } else if (item.includes('Mr Tan Lacoste (Dozen)')) {
+                itemPrice = 33.00
+            } else if (item.includes('Mr Tan Lacoste (Single)')) {
+                itemPrice = 33.00
+            } else if (item.includes('Name Only')) {
+                itemPrice = 15.00
+            } else if (item.includes('Name & Number')) {
+                itemPrice = 35.00
+            } else {
+                // Default price if no specific item selected
+                itemPrice = 23.00
+            }
+
+            const total = itemPrice * qty
+            return total.toFixed(2)
+        }
+
         // If no quantity/pages yet, show base printing price as reference
         if (isPhotocopy) {
             return printingPrice.toFixed(2)
