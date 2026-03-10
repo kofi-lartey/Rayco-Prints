@@ -2,12 +2,10 @@
 const MAILJET_API_KEY = process.env.MAILJET_API_KEY;
 const MAILJET_API_SECRET = process.env.MAILJET_API_SECRET;
 
-// Verified sender email (must be from Mailjet validated domain)
-const SENDER_EMAIL = 'raycographics@gmail.com';
+// Sender email (verified in Mailjet dashboard)
+const SENDER_EMAIL = 'raycoprints@gmail.com';
 const SENDER_NAME = 'Rayco Prints';
-
-// Recipient email (your business email)
-const RECIPIENT_EMAIL = 'raycographics@gmail.com';
+const RECIPIENT_EMAIL = 'raycoprints@gmail.com';
 
 // HTML Email Template - Order Form
 const getEmailHtml = (data) => {
