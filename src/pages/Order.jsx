@@ -165,16 +165,22 @@ export default function Order() {
         // Secretarial Services pricing - price per page based on item
         if (isSecretarial) {
             // Base price for secretarial work (typing per page)
-            let typingPrice = 2.00 // Default per page
+            let typingPrice = 4.00 // Default for typing only (A4)
 
-            // Check if it's CV writing (usually more expensive)
+            // Check item type and set price accordingly
             if (formData.item?.toLowerCase().includes('cv') || formData.item?.toLowerCase().includes('resume')) {
-                typingPrice = 50.00 // CV writing is more expensive
+                typingPrice = 10.00 // CV writing
             } else if (formData.item?.toLowerCase().includes('online application')) {
-                typingPrice = 20.00 // Online application per submission
+                typingPrice = 30.00 // Online application
+            } else if (formData.item?.toLowerCase().includes('application letter')) {
+                typingPrice = 7.00 // Application letter
+            } else if (formData.item?.toLowerCase().includes('scanning')) {
+                typingPrice = 2.00 // Scanning
+            } else if (formData.item?.toLowerCase().includes('printing')) {
+                typingPrice = 5.00 // Typing & Printing
             } else {
-                // Regular typing - price per page
-                typingPrice = 2.00
+                // Regular typing only
+                typingPrice = 4.00
             }
 
             // Calculate total: typing price × pages × quantity
@@ -662,7 +668,7 @@ ${formData.message}`
                         </div>
                     ) : (
                         /* Show item dropdown when coming from main order page */
-                        !prefillItem && (isPhotocopy || isPrinting) && (
+                        !prefillItem && (isPhotocopy || isPrinting || isSecretarial) && (
                             <div>
                                 <label htmlFor="item" className="block text-sm font-medium text-gray-700 mb-1">
                                     Select Option
@@ -690,6 +696,16 @@ ${formData.message}`
                                             <option value="A4 Printing - Colour">A4 Printing - Colour</option>
                                             <option value="A3 Printing - B&W">A3 Printing - B&W</option>
                                             <option value="A3 Printing - Colour">A3 Printing - Colour</option>
+                                        </>
+                                    )}
+                                    {isSecretarial && (
+                                        <>
+                                            <option value="Typing & Printing (A4)">Typing & Printing (A4) - GHC 5.00</option>
+                                            <option value="Typing Only (A4)">Typing Only (A4) - GHC 4.00</option>
+                                            <option value="Application Letter">Application Letter - GHC 7.00</option>
+                                            <option value="CV">CV - GHC 10.00</option>
+                                            <option value="Online Application">Online Application - GHC 30.00</option>
+                                            <option value="Scanning">Scanning - GHC 2.00</option>
                                         </>
                                     )}
                                 </Select>
