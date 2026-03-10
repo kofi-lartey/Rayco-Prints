@@ -5,6 +5,208 @@ const MAILJET_API_SECRET = process.env.MAILJET_API_SECRET;
 // Recipient email (your business email - where you receive orders)
 const RECIPIENT_EMAIL = 'raycoprints@gmail.com';
 
+// Admin email template (without payment details)
+const getAdminEmailHtml = (data) => {
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body { margin: 0; padding: 0; background-color: #f0f2f5; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+    img { border: 0; outline: none; display: block; max-width: 100%; max-height: 300px; border-radius: 12px; margin: 0 auto; }
+    @media screen and (max-width: 600px) {
+      .wrapper { width: 100% !important; border-radius: 0 !important; }
+      .column { display: block !important; width: 100% !important; padding: 0 !important; }
+      .content-padding { padding: 25px 15px !important; }
+      .mobile-btn { width: 100% !important; display: block !important; margin: 0 !important; }
+    }
+    a { text-decoration: none; }
+  </style>
+</head>
+<body>
+  <table width="100%" bgcolor="#f0f2f5" cellspacing="0" cellpadding="0">
+   <tr>
+  <td align="center" style="padding:30px;background:#000;">
+    <img src="https://res.cloudinary.com/djjgkezui/image/upload/v1772650253/logo_krbgmz.png" 
+         alt="Rayco Prints Logo" 
+         style="max-height:80px;margin-bottom:15px;" />
+    <div style="font-size:24px;font-weight:900;color:#fff;letter-spacing:3px;text-transform:uppercase;">
+      RAYCO PRINTS
+    </div>
+    <div style="font-size:10px;color:#ffcc00;margin-top:5px;letter-spacing:4px;font-weight:700;">
+      PREMIUM PRINTING SERVICES
+    </div>
+  </td>
+</tr>
+          <tr>
+            <td align="center" style="padding:12px;background:#fff9e6;border-bottom:1px solid #ffeeba;">
+              <span style="font-size:11px;font-weight:700;color:#856404;text-transform:uppercase;">New Order Received</span>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:40px;" class="content-padding">
+              <table width="100%" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td width="55%" class="column" valign="top">
+                    <p style="margin:0;font-size:11px;color:#888;text-transform:uppercase;font-weight:700;">Client Details</p>
+                    <p style="margin:5px 0 2px 0;font-size:18px;color:#1a1a1a;font-weight:700;">${data.name || 'N/A'}</p>
+                    <p style="margin:0 0 20px 0;font-size:14px;color:#666;">${data.phone || 'N/A'} - ${data.email || 'N/A'}</p>
+                    <p style="margin:0;font-size:11px;color:#888;text-transform:uppercase;font-weight:700;">Specifications</p>
+                    <p style="margin:8px 0 4px 0;font-size:14px;"><strong>Service:</strong> ${data.service || 'N/A'}</p>
+                    <p style="margin:0 0 4px 0;font-size:14px;"><strong>Item:</strong> ${data.item || 'N/A'}</p>
+                    <p style="margin:0 0 4px 0;font-size:14px;"><strong>Side:</strong> ${data.side || 'N/A'}</p>
+                    <p style="margin:0 0 4px 0;font-size:14px;"><strong>Specs:</strong> ${data.color || 'N/A'} - ${data.pages || '1'} Pages</p>
+                    <p style="margin:0 0 4px 0;font-size:14px;"><strong>Qty:</strong> ${data.quantity || '1'}</p>
+                  </td>
+                  <td width="45%" class="column" valign="top" align="right">
+                    <p style="margin:0;font-size:11px;font-weight:700;text-transform:uppercase;">Total Price</p>
+                    <p style="margin:5px 0 25px 0;font-size:26px;font-weight:900;color:#1a1a1a;">GHC ${data.totalPrice || '0.00'}</p>
+                    ${data.fileUrl ? `<a href="${data.fileUrl}" target="_blank" style="background:#007bff;color:#fff;padding:12px 20px;border-radius:8px;font-size:13px;font-weight:700;display:inline-block;">View Print File</a>` : ''}
+                  </td>
+                </tr>
+              </table>
+              ${data.fileUrl ? `
+              <div style="background:#f8f9fa;border-radius:12px;padding:20px;margin-top:25px;border:1px solid #edf0f2;text-align:center;">
+                <p style="margin:0 0 5px 0;font-size:11px;color:#777;font-weight:700;text-transform:uppercase;">File</p>
+                <a href="${data.fileUrl}" target="_blank" style="background:#007bff;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:700;display:inline-block;margin-bottom:5px;">View File</a>
+                ${data.voiceUrl ? `
+                <div style="background:#ffffff; border-radius:50px; padding:12px 20px; margin-top:20px; border:1px solid #eee; display:block;">
+                  <table width="100%" cellspacing="0" cellpadding="0">
+                    <tr>
+                      <td width="30" valign="middle">
+                        <a href="${data.voiceUrl}" target="_blank" style="text-decoration:none; font-size:22px;">▶️</a>
+                      </td>
+                      <td align="left" valign="middle" style="padding-left:10px;">
+                        <p style="margin:0; font-size:12px; color:#666; font-weight:600;">Voice Note Recording</p>
+                      </td>
+                      <td align="right" valign="middle">
+                        <a href="${data.voiceUrl}" target="_blank" style="background:#007bff; color:#ffffff; padding:6px 14px; border-radius:20px; font-size:11px; font-weight:700; text-transform:uppercase;">Play</a>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+                ` : ''}
+              </div>
+              ` : ''}
+              ${data.message ? `
+              <div style="background:#f8f9fa;border-radius:12px;padding:20px;margin-top:25px;border:1px solid #edf0f2;">
+                <p style="margin:0;font-size:11px;color:#999;font-weight:700;text-transform:uppercase;">Message:</p>
+                <p style="margin:8px 0 0 0;font-size:14px;color:#444;line-height:1.6;font-style:italic;">${data.message}</p>
+              </div>
+              ` : ''}
+              <div style="background:#fff3cd;border-radius:12px;padding:20px;margin-top:25px;border:1px solid #ffeeba;text-align:center;">
+                <p style="margin:0;font-size:14px;color:#856404;font-weight:700;">Questions about this order?</p>
+                <p style="margin:10px 0 0 0;font-size:13px;color:#856404;">
+                  Email the client at <a href="mailto:${data.email || ''}" style="color:#007bff;">${data.email || 'their email'}</a> or call them.
+                </p>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td align="center" style="padding:30px;background:#fcfcfc;border-top:1px solid #eee;">
+              <p style="margin:0;font-size:14px;font-weight:800;color:#1a1a1a;">RAYCO PRINTS STUDIO</p>
+              <p style="margin:5px 0 0 0;font-size:12px;color:#666;">Prampram-NearV-Pub, Ghana</p>
+            </td>
+          </tr>
+        </table>
+</body>
+</html>`;
+};
+
+// Customer email template (WITH payment details)
+const getCustomerEmailHtml = (data) => {
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body { margin: 0; padding: 0; background-color: #f0f2f5; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+    img { border: 0; outline: none; display: block; max-width: 100%; max-height: 300px; border-radius: 12px; margin: 0 auto; }
+    @media screen and (max-width: 600px) {
+      .wrapper { width: 100% !important; border-radius: 0 !important; }
+      .column { display: block !important; width: 100% !important; padding: 0 !important; }
+      .content-padding { padding: 25px 15px !important; }
+      .mobile-btn { width: 100% !important; display: block !important; margin: 0 !important; }
+    }
+    a { text-decoration: none; }
+  </style>
+</head>
+<body>
+  <table width="100%" bgcolor="#f0f2f5" cellspacing="0" cellpadding="0">
+   <tr>
+  <td align="center" style="padding:30px;background:#000;">
+    <img src="https://res.cloudinary.com/djjgkezui/image/upload/v1772650253/logo_krbgmz.png" 
+         alt="Rayco Prints Logo" 
+         style="max-height:80px;margin-bottom:15px;" />
+    <div style="font-size:24px;font-weight:900;color:#fff;letter-spacing:3px;text-transform:uppercase;">
+      RAYCO PRINTS
+    </div>
+    <div style="font-size:10px;color:#ffcc00;margin-top:5px;letter-spacing:4px;font-weight:700;">
+      PREMIUM PRINTING SERVICES
+    </div>
+  </td>
+</tr>
+          <tr>
+            <td align="center" style="padding:12px;background:#d4edda;border-bottom:1px solid #c3e6cb;">
+              <span style="font-size:11px;font-weight:700;color:#155724;text-transform:uppercase;">✓ Order Confirmed</span>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:40px;" class="content-padding">
+              <p style="margin:0;font-size:18px;color:#1a1a1a;font-weight:700;">Hi ${data.name || 'there'}!</p>
+              <p style="margin:15px 0;font-size:14px;color:#666;line-height:1.6;">
+                Thank you for your order! We've received your request and will start working on it right away.
+              </p>
+              <table width="100%" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td width="55%" class="column" valign="top">
+                    <p style="margin:0;font-size:11px;color:#888;text-transform:uppercase;font-weight:700;">Your Order</p>
+                    <p style="margin:8px 0 4px 0;font-size:14px;"><strong>Service:</strong> ${data.service || 'N/A'}</p>
+                    <p style="margin:0 0 4px 0;font-size:14px;"><strong>Item:</strong> ${data.item || 'N/A'}</p>
+                    <p style="margin:0 0 4px 0;font-size:14px;"><strong>Side:</strong> ${data.side || 'N/A'}</p>
+                    <p style="margin:0 0 4px 0;font-size:14px;"><strong>Specs:</strong> ${data.color || 'N/A'} - ${data.pages || '1'} Pages</p>
+                    <p style="margin:0 0 4px 0;font-size:14px;"><strong>Qty:</strong> ${data.quantity || '1'}</p>
+                  </td>
+                  <td width="45%" class="column" valign="top" align="right">
+                    <p style="margin:0;font-size:11px;font-weight:700;text-transform:uppercase;">Total Price</p>
+                    <p style="margin:5px 0 25px 0;font-size:26px;font-weight:900;color:#1a1a1a;">GHC ${data.totalPrice || '0.00'}</p>
+                  </td>
+                </tr>
+              </table>
+              
+              <div style="background:#fff3cd;border-radius:12px;padding:20px;margin-top:25px;border:1px solid #ffeeba;text-align:center;">
+                <p style="margin:0;font-size:14px;color:#856404;font-weight:700;">Payment Details</p>
+                <p style="margin:10px 0 0 0;font-size:13px;color:#856404;">
+                  Please pay via MoMo to <strong>0246503887</strong> (RaycoPrints)
+                </p>
+              </div>
+              
+              <div style="background:#f8f9fa;border-radius:12px;padding:20px;margin-top:25px;border:1px solid #edf0f2;text-align:center;">
+                <p style="margin:0;font-size:14px;color:#666;font-weight:700;">Pickup Location</p>
+                <p style="margin:10px 0 0 0;font-size:14px;color:#1a1a1a;">Prampram-Near V-Pub, Ghana</p>
+              </div>
+              
+              <div style="background:#fff3cd;border-radius:12px;padding:20px;margin-top:25px;border:1px solid #ffeeba;text-align:center;">
+                <p style="margin:0;font-size:14px;color:#856404;font-weight:700;">Questions about your order?</p>
+                <p style="margin:10px 0 0 0;font-size:13px;color:#856404;">
+                  Email us at <a href="mailto:raycoprints@gmail.com" style="color:#007bff;">raycoprints@gmail.com</a> or call us directly.
+                </p>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td align="center" style="padding:30px;background:#fcfcfc;border-top:1px solid #eee;">
+              <p style="margin:0;font-size:14px;font-weight:800;color:#1a1a1a;">RAYCO PRINTS STUDIO</p>
+              <p style="margin:5px 0 0 0;font-size:12px;color:#666;">Prampram-NearV-Pub, Ghana</p>
+            </td>
+          </tr>
+        </table>
+</body>
+</html>`;
+};
+
 // HTML Email Template - Order Form
 const getEmailHtml = (data) => {
   return `<!DOCTYPE html>
@@ -245,29 +447,51 @@ exports.handler = async function (event) {
     }
 
     // Select template based on form type
-    const emailHtml = isContactForm
+    // For orders: send admin version (no payment) to admin, customer version (with payment) to customer
+    const adminEmailHtml = isContactForm
       ? getContactEmailHtml({
-        name: name,
-        email: email,
-        phone: phone,
-        subject: message?.split('\n\n')[0] || 'No subject',
-        message: message?.split('\n\n').slice(1).join('\n\n') || message || ''
-      })
-      : getEmailHtml({
-        name: name,
-        email: email,
-        phone: phone,
-        service: service,
-        item: item,
-        side: side,
-        color: color,
-        pages: pages,
-        quantity: quantity,
-        totalPrice: totalPrice,
-        message: message,
-        fileUrl: fileUrl,
-        voiceUrl: voiceUrl
-      });
+          name: name,
+          email: email,
+          phone: phone,
+          subject: message?.split('\n\n')[0] || 'No subject',
+          message: message?.split('\n\n').slice(1).join('\n\n') || message || ''
+        })
+      : getAdminEmailHtml({
+          name: name,
+          email: email,
+          phone: phone,
+          service: service,
+          item: item,
+          side: side,
+          color: color,
+          pages: pages,
+          quantity: quantity,
+          totalPrice: totalPrice,
+          message: message,
+          fileUrl: fileUrl,
+          voiceUrl: voiceUrl
+        });
+
+    const customerEmailHtml = isContactForm
+      ? getContactEmailHtml({
+          name: name,
+          email: email,
+          phone: phone,
+          subject: message?.split('\n\n')[0] || 'No subject',
+          message: message?.split('\n\n').slice(1).join('\n\n') || message || ''
+        })
+      : getCustomerEmailHtml({
+          name: name,
+          email: email,
+          phone: phone,
+          service: service,
+          item: item,
+          side: side,
+          color: color,
+          pages: pages,
+          quantity: quantity,
+          totalPrice: totalPrice
+        });
 
     // Set subject based on form type
     const emailSubject = isContactForm
@@ -291,20 +515,31 @@ exports.handler = async function (event) {
       }
     });
 
-    // Send email to admin (you)
-    // Show customer's name as sender
+    // Send email to admin (you) - NO payment details
     const adminMailOptions = {
       from: `${name || 'Customer'} <raycoprints@gmail.com>`,
-      to: RECIPIENT_EMAIL, // Your email (raycoprints@gmail.com)
+      to: RECIPIENT_EMAIL, // raycoprints@gmail.com
       replyTo: email, // Customer's email so you can reply directly
       subject: emailSubject,
-      html: emailHtml
+      html: adminEmailHtml
     };
 
-    // Send the email
-    const adminResult = await transporter.sendMail(adminMailOptions);
+    // Send confirmation email to customer - WITH payment details
+    const customerMailOptions = {
+      from: 'Rayco Prints <raycoprints@gmail.com>',
+      to: 'kofilartey12@gmail.com', // Customer receives confirmation with payment info
+      subject: isContactForm ? `Re: ${emailSubject}` : `Order Confirmed - GHC ${totalPrice || '0.00'}`,
+      html: customerEmailHtml
+    };
 
-    console.log('Email sent to admin:', adminResult.messageId);
+    // Send both emails
+    const [adminResult, customerResult] = await Promise.all([
+      transporter.sendMail(adminMailOptions),
+      transporter.sendMail(customerMailOptions)
+    ]);
+
+    console.log('Admin email sent:', adminResult.messageId);
+    console.log('Customer email sent:', customerResult.messageId);
 
     return {
       statusCode: 200,
