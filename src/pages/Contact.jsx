@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect } from 'react'
-import emailjs from '@emailjs/browser'
 import { Link } from 'react-router-dom'
 import { useForm, useLoading } from '../hooks'
 import { Button, Input, Textarea, Card } from '../components/ui'
@@ -100,40 +99,30 @@ const Contact = () => {
 
         if (!validateForm()) return
 
-        // If email.js is not configured, fall back to mailto
-        if (emailConfig.serviceId === 'YOUR_SERVICE_ID' ||
-            emailConfig.templateId === 'YOUR_TEMPLATE_ID' ||
-            emailConfig.publicKey === 'YOUR_PUBLIC_KEY') {
-            // Fallback to mailto
-            const subject = formData.subject || `Contact from ${formData.name}`
-            const body = `Name: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone}\n\nMessage:\n${formData.message}`
-            window.location.href = `mailto:${contact.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
-            setSuccess(true)
-            return
-        }
-
+        // Send contact form via Netlify function (Mailjet)
         startLoading()
 
         try {
-            const templateParams = {
-                from_name: formData.name,
-                from_email: formData.email,
-                phone: formData.phone || 'Not provided',
-                subject: formData.subject || 'No subject',
-                message: formData.message
-            }
+            const response = await fetch('/.netlify/functions/send-email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: formData.name,
+                    email: formData.email,
+                    phone: formData.phone || '',
+                    service: 'Contact Form',
+                    message: `Subject: ${formData.subject || 'No subject'}\n\n${formData.message}`
+                })
+            })
 
-            await emailjs.send(
-                emailConfig.serviceId,
-                emailConfig.templateId,
-                templateParams,
-                emailConfig.publicKey
-            )
+            if (!response.ok) {
+                throw new Error('Failed to send message')
+            }
 
             setSuccess(true)
             resetForm()
         } catch (err) {
-            console.error('EmailJS Error:', err)
+            console.error('Email Error:', err)
             // Fallback to mailto on error
             const subject = formData.subject || `Contact from ${formData.name}`
             const body = `Name: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone}\n\nMessage:\n${formData.message}`

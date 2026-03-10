@@ -121,11 +121,8 @@ export const detectFileType = (fileUrl) => {
 }
 
 /**
- * Send order email using EmailJS
- * @param {object} config - EmailJS configuration
- * @param {string} config.serviceId - EmailJS service ID
- * @param {string} config.templateId - EmailJS template ID
- * @param {string} config.publicKey - EmailJS public key
+ * Send order email via Netlify function (uses Mailjet)
+ * @param {object} config - Configuration object (kept for compatibility)
  * @param {object} orderData - Order data to send
  * @param {string} orderData.clientName - Client's name
  * @param {string} orderData.clientEmail - Client's email
@@ -139,49 +136,38 @@ export const detectFileType = (fileUrl) => {
  * @param {number|string} orderData.totalPrice - Total price
  * @param {string} orderData.fileUrl - Uploaded file URL
  * @param {string} orderData.message - Additional message
- * @returns {Promise} - EmailJS send promise
+ * @returns {Promise} - Netlify function response
  */
 export const sendOrderEmail = async (config, orderData) => {
-    const { serviceId, templateId, publicKey } = config
-
-    // Validate config
-    if (!serviceId || !templateId || !publicKey) {
-        throw new Error('EmailJS configuration is missing')
+    // Prepare data for Netlify function (Mailjet)
+    const emailData = {
+        name: orderData.clientName,
+        email: orderData.clientEmail,
+        phone: orderData.clientPhone,
+        service: orderData.service,
+        item: orderData.item,
+        side: orderData.side,
+        color: orderData.color,
+        pages: orderData.pages,
+        quantity: orderData.quantity,
+        totalPrice: orderData.totalPrice,
+        fileUrl: orderData.fileUrl,
+        voiceUrl: orderData.voiceUrl,
+        fileInfo: orderData.fileInfo,
+        message: orderData.message
     }
 
-    // Get file info from Cloudinary response
-    const { format, resourceType } = orderData.fileInfo || { format: '', resourceType: '' }
+    // Call Netlify function which uses Mailjet
+    const response = await fetch('/.netlify/functions/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(emailData)
+    })
 
-    // Calculate expiry date (7 days from now)
-    const expiryDate = new Date()
-    expiryDate.setDate(expiryDate.getDate() + 7)
-    const expiry_date = expiryDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
-
-    // Generate order ID
-    const orderId = 'ORD-' + Date.now().toString(36).toUpperCase()
-
-    // Prepare template parameters - keep all values as strings for EmailJS compatibility
-    const templateParams = {
-        from_name: orderData.clientName || 'No Name',
-        phone: orderData.clientPhone || 'Not provided',
-        from_email: orderData.clientEmail || 'Not provided',
-        service: orderData.service || 'Not specified',
-        item: orderData.item || 'Not specified',
-        side: orderData.side || 'Not specified',
-        color: orderData.color || 'Not specified',
-        pages: String(orderData.pages || 0),
-        quantity: String(orderData.quantity || 1),
-        total_price: String(orderData.totalPrice || 0),
-        file_url: orderData.fileUrl || '',
-        voice_url: orderData.voiceUrl || '',
-        file_format: (orderData.fileInfo?.format) || 'Unknown',
-        resource_type: (orderData.fileInfo?.resourceType) || 'Unknown',
-        message: orderData.message || 'No message',
-        expiry_date: expiry_date,
-        order_id: orderId
+    if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.message || 'Failed to send email')
     }
 
-    // Dynamically import emailjs to avoid issues if not installed
-    const emailjs = await import('@emailjs/browser')
-    return emailjs.send(serviceId, templateId, templateParams, publicKey)
+    return response.json()
 }
