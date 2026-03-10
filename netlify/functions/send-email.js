@@ -279,11 +279,15 @@ exports.handler = async function (event) {
       : `New Order: ${service || 'Printing Service'} - GHC ${totalPrice || '0.00'}`;
 
     // Send email using Mailjet API (v3.1)
-    // Use customer's email as sender, business email as recipient
-    const emailResponse = await client.post('v3.1/send').request({
+    // Use your verified Mailjet sender as From, customer's email as Reply-To
+    const emailResponse = await client.post('send').request({
       Messages: [{
         From: {
-          Email: email, // Customer's email from the form
+          Email: 'raycoprints@gmail.com', // Your verified Mailjet sender
+          Name: 'Rayco Prints'
+        },
+        ReplyTo: {
+          Email: email, // Customer's email for replies
           Name: name || 'Customer'
         },
         To: [{
@@ -305,14 +309,20 @@ exports.handler = async function (event) {
     };
 
   } catch (error) {
-    console.error('Mailjet email sending error:', error);
-    console.error('Error details:', JSON.stringify(error, null, 2));
+    // Safely extract error information without causing circular JSON issues
+    const errorInfo = {
+      message: error.message,
+      code: error.code,
+      statusCode: error.statusCode || error.response?.status,
+      statusText: error.statusText
+    };
+    console.error('Mailjet email sending error:', errorInfo);
 
     return {
       statusCode: 200,
       body: JSON.stringify({
         message: 'Order submitted but email notification may have failed',
-        error: error.message
+        error: errorInfo.message
       })
     };
   }
