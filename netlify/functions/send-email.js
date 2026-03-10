@@ -278,24 +278,21 @@ exports.handler = async function (event) {
       ? `Contact Form: ${name} - ${(message?.split('\n\n')[0] || 'New message').substring(0, 50)}`
       : `New Order: ${service || 'Printing Service'} - GHC ${totalPrice || '0.00'}`;
 
-    // Send email using Mailjet API (v3.1)
+    // Send email using Mailjet API (v3)
     // Use your verified Mailjet sender as From, customer's email as Reply-To
-    const emailResponse = await client.post('send').request({
+    const emailResponse = await client.post('message').request({
       Messages: [{
-        From: {
-          Email: 'raycoprints@gmail.com', // Your verified Mailjet sender
-          Name: 'Rayco Prints'
-        },
-        ReplyTo: {
-          Email: email, // Customer's email for replies
-          Name: name || 'Customer'
-        },
-        To: [{
-          Email: RECIPIENT_EMAIL, // Your business email
-          Name: 'Rayco Prints Admin'
-        }],
+        FromEmail: 'raycoprints@gmail.com',
+        FromName: 'Rayco Prints',
+        ReplyTo: email,
+        Recipients: [
+          {
+            Email: RECIPIENT_EMAIL,
+            Name: 'Rayco Prints Admin'
+          }
+        ],
         Subject: emailSubject,
-        HTMLPart: emailHtml
+        HTML: emailHtml
       }]
     });
 
