@@ -274,31 +274,33 @@ exports.handler = async function (event) {
       ? `Contact Form: ${name} - ${(message?.split('\n\n')[0] || 'New message').substring(0, 50)}`
       : `New Order: ${service || 'Printing Service'} - GHC ${totalPrice || '0.00'}`;
 
-    // Initialize Mailjet using SMTP
-    const mailjet = require('node-mailjet');
+    // Initialize nodemailer with Mailjet SMTP
+    const nodemailer = require('nodemailer');
     
     // Log API key first few chars for debugging
     console.log('Using API key:', MAILJET_API_KEY ? MAILJET_API_KEY.substring(0, 8) + '...' : 'undefined');
 
-    // Use SMTP connection for more reliable sending
-    const smtpClient = mailjet.smtpconnect({
+    // Create transporter for Mailjet
+    const transporter = nodemailer.createTransport({
       host: 'in-v3.mailjet.com',
       port: 587,
-      user: MAILJET_API_KEY,
-      password: MAILJET_API_SECRET,
-      tls: true
+      secure: false,
+      auth: {
+        user: MAILJET_API_KEY,
+        pass: MAILJET_API_SECRET
+      }
     });
 
-    // Send email using SMTP
-    const result = await smtpClient.send({
+    // Send email
+    const result = await transporter.sendMail({
       from: 'Rayco Prints <raycoprints@gmail.com>',
-      to: `Rayco Prints Admin <${RECIPIENT_EMAIL}>`,
+      to: RECIPIENT_EMAIL,
       replyTo: email,
       subject: emailSubject,
       html: emailHtml
     });
 
-    console.log('Mailjet SMTP response:', result);
+    console.log('Email sent:', result.messageId);
 
     return {
       statusCode: 200,
