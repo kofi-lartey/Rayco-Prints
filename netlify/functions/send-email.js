@@ -442,6 +442,9 @@ exports.handler = async function (event) {
       message
     } = JSON.parse(event.body);
 
+    // Debug log
+    console.log('Order received:', { name, email, phone, service, item, fileUrl, voiceUrl });
+
     // Check if this is a contact form or order
     const isContactForm = service === 'Contact Form';
 

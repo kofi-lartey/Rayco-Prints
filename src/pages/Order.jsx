@@ -832,7 +832,7 @@ ${formData.message}`
 
                     {/* File Upload or Voice Recording */}
                     {!isTshirts && (
-                    isSecretarial ? (
+                    (isSecretarial || isPhotocopy || isPrinting) ? (
                         // Voice Recording + File Upload for Secretarial Services
                         <div className="space-y-6">
                             {/* Voice Recording Section */}
