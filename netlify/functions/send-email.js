@@ -2,9 +2,7 @@
 const MAILJET_API_KEY = process.env.MAILJET_API_KEY;
 const MAILJET_API_SECRET = process.env.MAILJET_API_SECRET;
 
-// Sender email (verified in Mailjet dashboard)
-const SENDER_EMAIL = 'raycoprints@gmail.com';
-const SENDER_NAME = 'Rayco Prints';
+// Recipient email (your business email - where you receive orders)
 const RECIPIENT_EMAIL = 'raycoprints@gmail.com';
 
 // HTML Email Template - Order Form
@@ -280,15 +278,16 @@ exports.handler = async function (event) {
       ? `Contact Form: ${name} - ${(message?.split('\n\n')[0] || 'New message').substring(0, 50)}`
       : `New Order: ${service || 'Printing Service'} - GHC ${totalPrice || '0.00'}`;
 
-    // Send email using Mailjet API
-    const emailResponse = await client.post('send').request({
+    // Send email using Mailjet API (v3.1)
+    // Use customer's email as sender, business email as recipient
+    const emailResponse = await client.post('v3.1/send').request({
       Messages: [{
         From: {
-          Email: SENDER_EMAIL,
-          Name: SENDER_NAME
+          Email: email, // Customer's email from the form
+          Name: name || 'Customer'
         },
         To: [{
-          Email: RECIPIENT_EMAIL,
+          Email: RECIPIENT_EMAIL, // Your business email
           Name: 'Rayco Prints Admin'
         }],
         Subject: emailSubject,
