@@ -248,8 +248,9 @@ exports.handler = async function (event) {
       };
     }
 
-    // Initialize Mailjet
-    const mailjet = require('node-mailjet').connect(MAILJET_API_KEY, MAILJET_API_SECRET);
+    // Initialize Mailjet (v6 API)
+    const mailjet = require('node-mailjet');
+    const client = mailjet.apiConnect(MAILJET_API_KEY, MAILJET_API_SECRET);
 
     // Select template based on form type
     const emailHtml = isContactForm
@@ -282,7 +283,7 @@ exports.handler = async function (event) {
       : `New Order: ${service || 'Printing Service'} - GHC ${totalPrice || '0.00'}`;
 
     // Send email using Mailjet API
-    const emailResponse = await mailjet.post('send').request({
+    const emailResponse = await client.post('send').request({
       Messages: [{
         From: {
           Email: SENDER_EMAIL,
@@ -308,6 +309,7 @@ exports.handler = async function (event) {
 
   } catch (error) {
     console.error('Mailjet email sending error:', error);
+    console.error('Error details:', JSON.stringify(error, null, 2));
 
     return {
       statusCode: 200,
