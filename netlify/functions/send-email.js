@@ -274,60 +274,31 @@ exports.handler = async function (event) {
       ? `Contact Form: ${name} - ${(message?.split('\n\n')[0] || 'New message').substring(0, 50)}`
       : `New Order: ${service || 'Printing Service'} - GHC ${totalPrice || '0.00'}`;
 
-    // Initialize Mailjet
+    // Initialize Mailjet using SMTP
     const mailjet = require('node-mailjet');
-    const client = mailjet.apiConnect(MAILJET_API_KEY, MAILJET_API_SECRET, {
-      url: 'api.mailjet.com'
-    });
-
+    
     // Log API key first few chars for debugging
     console.log('Using API key:', MAILJET_API_KEY ? MAILJET_API_KEY.substring(0, 8) + '...' : 'undefined');
 
-    // Send email using Mailjet API (v3.1)
-    const result = await client.post('send').request({
-      Messages: [{
-        From: {
-          Email: 'raycoprints@gmail.com',
-          Name: 'Rayco Prints'
-        },
-        ReplyTo: email,
-        To: [{
-          Email: RECIPIENT_EMAIL,
-          Name: 'Rayco Prints Admin'
-        }],
-        Subject: emailSubject,
-        HTMLPart: emailHtml
-      }]
+    // Use SMTP connection for more reliable sending
+    const smtpClient = mailjet.smtpconnect({
+      host: 'in-v3.mailjet.com',
+      port: 587,
+      user: MAILJET_API_KEY,
+      password: MAILJET_API_SECRET,
+      tls: true
     });
 
-    console.log('Mailjet response:', result.body);
-
-    return {
-      statusCode: 200,
-      body: JSON.stringify({
-        message: 'Email sent successfully'
-      })
-    };
-
-    // Send email using Mailjet API (v3.1)
-    // Use your verified Mailjet sender as From, customer's email as Reply-To
-    const emailResponse = await client.post('send').request({
-      Messages: [{
-        From: {
-          Email: 'raycoprints@gmail.com',
-          Name: 'Rayco Prints'
-        },
-        ReplyTo: email,
-        To: [{
-          Email: RECIPIENT_EMAIL,
-          Name: 'Rayco Prints Admin'
-        }],
-        Subject: emailSubject,
-        HTMLPart: emailHtml
-      }]
+    // Send email using SMTP
+    const result = await smtpClient.send({
+      from: 'Rayco Prints <raycoprints@gmail.com>',
+      to: `Rayco Prints Admin <${RECIPIENT_EMAIL}>`,
+      replyTo: email,
+      subject: emailSubject,
+      html: emailHtml
     });
 
-    console.log('Mailjet response:', emailResponse.body);
+    console.log('Mailjet SMTP response:', result);
 
     return {
       statusCode: 200,
