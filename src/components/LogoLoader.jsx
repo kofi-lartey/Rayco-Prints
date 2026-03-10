@@ -64,7 +64,7 @@ const LogoLoader = ({ pathname }) => {
         }}>
           <img
             src="https://res.cloudinary.com/djjgkezui/image/upload/v1772650253/logo_krbgmz.png"
-            alt="RaycoPrints"
+            alt="Rayco Graphics"
             style={{
               width: '140px',
               height: 'auto',

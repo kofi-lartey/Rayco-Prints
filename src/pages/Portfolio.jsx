@@ -115,7 +115,7 @@ const Portfolio = () => {
         {
             name: "Sarah Mensah",
             company: "TechStart Ghana",
-            quote: "RaycoPrints delivered our business cards exactly as we imagined. Professional quality and fast turnaround!",
+            quote: "Rayco Graphics delivered our business cards exactly as we imagined. Professional quality and fast turnaround!",
             rating: 5
         },
         {

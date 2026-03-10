@@ -51,7 +51,7 @@ const HomeInstallPrompt = () => {
   const handleInstall = async () => {
     if (!deferredPrompt) {
       // For iOS, show instructions
-      alert('To install RaycoPrints App:\n\n1. Tap the Share button in Safari\n2. Tap "Add to Home Screen"');
+      alert('To install Rayco Graphics App:\n\n1. Tap the Share button in Safari\n2. Tap "Add to Home Screen"');
       return;
     }
 
@@ -95,7 +95,7 @@ const HomeInstallPrompt = () => {
             </svg>
           </div>
           <div className="flex-1">
-            <h3 className="font-bold text-gray-900 text-lg">Install RaycoPrints App</h3>
+            <h3 className="font-bold text-gray-900 text-lg">Install Rayco Graphics App</h3>
             <p className="text-gray-600 text-sm mt-1">Get quick access and offline support. Tap to install!</p>
           </div>
           <button 

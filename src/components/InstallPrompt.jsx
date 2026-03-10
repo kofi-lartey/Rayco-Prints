@@ -66,7 +66,7 @@ const InstallPrompt = () => {
     <button
       onClick={handleInstallClick}
       className="fixed bottom-20 right-4 z-50 bg-[#1e3a5f] text-white px-4 py-3 rounded-full shadow-lg hover:bg-[#2a4a73] transition-all duration-300 flex items-center gap-2 animate-bounce"
-      aria-label="Install RaycoPrints App"
+      aria-label="Install Rayco Graphics App"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

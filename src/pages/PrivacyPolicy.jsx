@@ -15,7 +15,7 @@ const PrivacyPolicy = () => {
                         <section>
                             <h2 className="text-2xl font-semibold text-gray-800 mb-3">1. Introduction</h2>
                             <p>
-                                At RaycoPrints, we value your privacy and are committed to protecting your personal information.
+                                At Rayco Graphics, we value your privacy and are committed to protecting your personal information.
                                 This Privacy Policy explains how we collect, use, disclose, and safeguard your information
                                 when you visit our website or use our printing services.
                             </p>
@@ -149,9 +149,9 @@ const PrivacyPolicy = () => {
                                 If you have any questions or concerns about this Privacy Policy, please contact us:
                             </p>
                             <div className="mt-3 bg-gray-50 p-4 rounded-lg">
-                                <p><strong>RaycoPrints</strong></p>
+                                <p><strong>Rayco Graphics</strong></p>
                                 <p>Prampram - V-PUB, Ghana</p>
-                                <p>Email: raycoprints@gmail.com</p>
+                                <p>Email: raycographics@gmail.com</p>
                                 <p>Phone: +233 24 650 4887</p>
                             </div>
                         </section>

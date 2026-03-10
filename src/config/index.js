@@ -1,12 +1,12 @@
 /**
- * RaycoPrints Configuration
+ * Rayco Graphics Configuration
  * Centralized configuration for the application
  */
 
 export const CONFIG = {
     // Brand Information
     brand: {
-        name: 'RaycoPrints',
+        name: 'Rayco Graphics',
         fullName: 'Rayco Graphix & Secretarial Services',
         tagline: 'Precision Printing. Professional Results.',
         description: 'Your premier printing and secretarial services. Quality you can feel, service you can trust.',
@@ -17,7 +17,7 @@ export const CONFIG = {
     contact: {
         phone: '+233 24 650 4887',
         whatsapp: 'https://wa.me/233246504887',
-        email: 'raycoprints@gmail.com',
+        email: 'raycographics@gmail.com',
         address: 'Prampram - V-PUB, Ghana',
         location: {
             lat: 5.708327641251287,

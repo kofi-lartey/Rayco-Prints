@@ -10,8 +10,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
       manifest: {
-        name: 'RaycoPrints',
-        short_name: 'RaycoPrints',
+        name: 'Rayco Graphics',
+        short_name: 'Rayco Graphics',
         description: 'Your premier printing press delivering precision printing and professional results.',
         theme_color: '#1e3a5f',
         background_color: '#ffffff',

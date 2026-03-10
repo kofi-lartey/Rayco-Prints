@@ -108,7 +108,7 @@ export default function Receipt() {
                                 <div className="bg-blue-50 rounded-lg p-4 mb-6">
                                     <h3 className="font-bold text-blue-900 mb-2">Payment Information</h3>
                                     <p className="text-sm text-blue-800">
-                                        <strong>MoMo Number:</strong> 0246503887 (RaycoPrints)
+                                        <strong>MoMo Number:</strong> 0246503887 (Rayco Graphics)
                                     </p>
                                     <p className="text-xs text-blue-600 mt-2">
                                         Pay to this number and bring your receipt when picking up.

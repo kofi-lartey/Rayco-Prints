@@ -15,7 +15,7 @@ const TermsOfService = () => {
                         <section>
                             <h2 className="text-2xl font-semibold text-gray-800 mb-3">1. Acceptance of Terms</h2>
                             <p>
-                                By accessing and using the RaycoPrints website and services, you accept and agree to be
+                                By accessing and using the Rayco Graphics website and services, you accept and agree to be
                                 bound by the terms and provision of this agreement. If you do not agree to abide by
                                 these terms, please do not use our services.
                             </p>
@@ -24,7 +24,7 @@ const TermsOfService = () => {
                         <section>
                             <h2 className="text-2xl font-semibold text-gray-800 mb-3">2. Description of Service</h2>
                             <p>
-                                RaycoPrints provides professional printing services including but not limited to:
+                                Rayco Graphics provides professional printing services including but not limited to:
                             </p>
                             <ul className="list-disc pl-6 space-y-2 mt-2">
                                 <li>Business cards, letterheads, and corporate stationery</li>
@@ -79,7 +79,7 @@ const TermsOfService = () => {
                             <h3 className="text-xl font-medium text-gray-800 mt-4 mb-2">Our Content</h3>
                             <p>
                                 All content on our website, including logos, graphics, text, and software, is the
-                                property of RaycoPrints and is protected by copyright and other intellectual property laws.
+                                property of Rayco Graphics and is protected by copyright and other intellectual property laws.
                             </p>
 
                             <h3 className="text-xl font-medium text-gray-800 mt-4 mb-2">Copyright Infringement</h3>
@@ -133,7 +133,7 @@ const TermsOfService = () => {
                         <section>
                             <h2 className="text-2xl font-semibold text-gray-800 mb-3">10. Indemnification</h2>
                             <p>
-                                You agree to indemnify, defend, and hold harmless RaycoPrints and its officers, directors,
+                                You agree to indemnify, defend, and hold harmless Rayco Graphics and its officers, directors,
                                 employees, and agents from any claims, damages, losses, liabilities, costs, or expenses
                                 arising out of your use of our services or violation of these Terms of Service.
                             </p>
@@ -172,9 +172,9 @@ const TermsOfService = () => {
                                 If you have any questions about these Terms of Service, please contact us:
                             </p>
                             <div className="mt-3 bg-gray-50 p-4 rounded-lg">
-                                <p><strong>RaycoPrints</strong></p>
+                                <p><strong>Rayco Graphics</strong></p>
                                 <p>Prampram - V-PUB, Ghana</p>
-                                <p>Email: raycoprints@gmail.com</p>
+                                <p>Email: raycographics@gmail.com</p>
                                 <p>Phone: +233 24 650 4887</p>
                             </div>
                         </section>
