@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { Card } from '../components/ui'
 import { useState, useEffect } from 'react'
+import HomeInstallPrompt from '../components/HomeInstallPrompt'
 
 const WHATSAPP_LINK = "https://wa.me/233246504887"
 
@@ -385,6 +386,7 @@ const Home = () => {
                     </div>
                 </div>
             </section>
+            <HomeInstallPrompt />
         </div>
     )
 }

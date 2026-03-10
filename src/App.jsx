@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import { useEffect } from 'react'
 import { Navbar, Footer } from './components/layout'
 import LogoLoader from './components/LogoLoader'
+import InstallPrompt from './components/InstallPrompt'
 import Home from './pages/Home'
 import Services from './pages/Services'
 import Portfolio from './pages/Portfolio'
@@ -35,6 +36,7 @@ const AppContent = () => {
   return (
     <>
       <LogoLoader pathname={pathname} />
+      <InstallPrompt />
       <ScrollToTop />
       <div className="min-h-screen flex flex-col">
         <Navbar />
