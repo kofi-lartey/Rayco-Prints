@@ -244,15 +244,6 @@ exports.handler = async function (event) {
       };
     }
 
-    // Initialize Mailjet (v6 API)
-    const mailjet = require('node-mailjet');
-    const client = mailjet.apiConnect(MAILJET_API_KEY, MAILJET_API_SECRET, {
-      url: 'api.mailjet.com'
-    });
-
-    // Log API key first few chars for debugging
-    console.log('Using API key:', MAILJET_API_KEY ? MAILJET_API_KEY.substring(0, 8) + '...' : 'undefined');
-
     // Select template based on form type
     const emailHtml = isContactForm
       ? getContactEmailHtml({
@@ -282,6 +273,41 @@ exports.handler = async function (event) {
     const emailSubject = isContactForm
       ? `Contact Form: ${name} - ${(message?.split('\n\n')[0] || 'New message').substring(0, 50)}`
       : `New Order: ${service || 'Printing Service'} - GHC ${totalPrice || '0.00'}`;
+
+    // Initialize Mailjet
+    const mailjet = require('node-mailjet');
+    const client = mailjet.apiConnect(MAILJET_API_KEY, MAILJET_API_SECRET, {
+      url: 'api.mailjet.com'
+    });
+
+    // Log API key first few chars for debugging
+    console.log('Using API key:', MAILJET_API_KEY ? MAILJET_API_KEY.substring(0, 8) + '...' : 'undefined');
+
+    // Send email using Mailjet API (v3.1)
+    const result = await client.post('send').request({
+      Messages: [{
+        From: {
+          Email: 'raycoprints@gmail.com',
+          Name: 'Rayco Prints'
+        },
+        ReplyTo: email,
+        To: [{
+          Email: RECIPIENT_EMAIL,
+          Name: 'Rayco Prints Admin'
+        }],
+        Subject: emailSubject,
+        HTMLPart: emailHtml
+      }]
+    });
+
+    console.log('Mailjet response:', result.body);
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        message: 'Email sent successfully'
+      })
+    };
 
     // Send email using Mailjet API (v3.1)
     // Use your verified Mailjet sender as From, customer's email as Reply-To
