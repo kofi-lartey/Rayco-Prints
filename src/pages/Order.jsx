@@ -71,6 +71,7 @@ export default function Order() {
     // Check if it's a photocopy service
     const isPhotocopy = formData.service?.toLowerCase().includes('photocopy') || formData.service === 'Photocopy'
     const isPrinting = formData.service?.toLowerCase().includes('printing') || formData.service === 'Printing'
+    const isPassport = formData.service === 'Passport Pictures'
     const isTshirts = formData.service?.toLowerCase().includes('t-shirts') || formData.service === 'T-Shirts and Jersey'
 
     // Determine color and side from item name if price was passed
@@ -783,18 +784,34 @@ ${formData.message}`
                     {/* Quantity */}
                     <div>
                         <label htmlFor="quantity" className="block text-sm font-medium text-gray-700 mb-1">
-                            Quantity *
+                            {isPassport ? 'Delivery Option *' : 'Quantity *'}
                         </label>
-                        <Input
-                            type="number"
-                            id="quantity"
-                            name="quantity"
-                            value={formData.quantity}
-                            onChange={handleChange}
-                            required
-                            min="1"
-                            placeholder="Number of copies"
-                        />
+                        {isPassport ? (
+                            <select
+                                id="quantity"
+                                name="quantity"
+                                value={formData.quantity}
+                                onChange={handleChange}
+                                required
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rayco-forest focus:border-transparent"
+                            >
+                                <option value="">-- Select Option --</option>
+                                <option value="Soft Copy">Send Soft Copy (via WhatsApp/Email)</option>
+                                <option value="Physical">Physical Print (Pickup)</option>
+                                <option value="Both">Both (Soft Copy + Physical)</option>
+                            </select>
+                        ) : (
+                            <Input
+                                type="number"
+                                id="quantity"
+                                name="quantity"
+                                value={formData.quantity}
+                                onChange={handleChange}
+                                required
+                                min="1"
+                                placeholder="Number of copies"
+                            />
+                        )}
                     </div>
 
                     {/* File Upload or Voice Recording */}

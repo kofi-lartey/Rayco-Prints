@@ -195,6 +195,16 @@ const getCustomerEmailHtml = (data) => {
                   Email us at <a href="mailto:raycoprints@gmail.com" style="color:#007bff;">raycoprints@gmail.com</a> or call us directly.
                 </p>
               </div>
+              
+              <div style="background:#ffc107;border-radius:12px;padding:20px;margin-top:25px;border:1px solid #ffc107;text-align:center;">
+                <p style="margin:0;font-size:14px;color:#000;font-weight:700;">⚠️ Check Your Spam Folder</p>
+                <p style="margin:10px 0 0 0;font-size:13px;color:#333;">
+                  If you don't see this email in your inbox, please check your spam/junk folder and mark it as "Not Spam" to ensure future emails from us go to your inbox.
+                </p>
+                <p style="margin:15px 0 0 0;font-size:12px;color:#666;">
+                  <strong>Tip:</strong> Add <a href="mailto:raycoprints@gmail.com" style="color:#007bff;">raycoprints@gmail.com</a> to your contacts to never miss an update!
+                </p>
+              </div>
             </td>
           </tr>
           <tr>

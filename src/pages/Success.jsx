@@ -48,6 +48,15 @@ const Success = () => {
                         </div>
                     </div>
 
+                    {/* Spam folder notice */}
+                    <div className="max-w-2xl mx-auto mt-8 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+                        <p className="text-amber-800 text-sm">
+                            <strong>📧 Check your email!</strong> We've sent a confirmation to your email address. 
+                            If you don't see it, please <strong>check your spam/junk folder</strong> and mark it as "Not Spam".
+                            Also, add <strong>raycoprints@gmail.com</strong> to your contacts to ensure you receive all future updates.
+                        </p>
+                    </div>
+
                     {/* Contact info */}
                     <div className="max-w-2xl mx-auto mt-12 p-6 bg-white rounded-2xl shadow-lg">
                         <h3 className="font-bold text-slate-900 mb-4">Need to reach us?</h3>
