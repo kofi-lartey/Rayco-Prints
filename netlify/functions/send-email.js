@@ -516,13 +516,21 @@ exports.handler = async function (event) {
       }
     });
 
+    // Email headers to help avoid spam
+    const commonHeaders = {
+      'X-Mailer': 'Rayco Prints',
+      'X-Priority': '1',
+      'List-Unsubscribe': '<mailto:unsubscribe@raycoprints@gmail.com>'
+    };
+
     // Send email to admin (you) - NO payment details
     const adminMailOptions = {
       from: `${name || 'Customer'} <raycoprints@gmail.com>`,
       to: RECIPIENT_EMAIL, // raycoprints@gmail.com
       replyTo: email, // Customer's email so you can reply directly
       subject: emailSubject,
-      html: adminEmailHtml
+      html: adminEmailHtml,
+      headers: commonHeaders
     };
 
     // Send confirmation email to customer - WITH payment details
@@ -530,7 +538,8 @@ exports.handler = async function (event) {
       from: 'Rayco Prints <raycoprints@gmail.com>',
       to: email, // Customer's email from the order form
       subject: isContactForm ? `Re: ${emailSubject}` : `Order Confirmed - GHC ${totalPrice || '0.00'}`,
-      html: customerEmailHtml
+      html: customerEmailHtml,
+      headers: commonHeaders
     };
 
     // Send both emails
