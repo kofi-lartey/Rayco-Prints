@@ -5,7 +5,7 @@ const MAILJET_API_SECRET = process.env.MAILJET_API_SECRET;
 // Recipient email (your business email - where you receive orders)
 const RECIPIENT_EMAIL = 'raycoprints@gmail.com';
 
-// Admin email template (without payment details)
+// Admin email template (without payment details) - with WhatsApp buttons for admin
 const getAdminEmailHtml = (data) => {
   return `<!DOCTYPE html>
 <html lang="en">
@@ -95,11 +95,12 @@ const getAdminEmailHtml = (data) => {
                 <p style="margin:8px 0 0 0;font-size:14px;color:#444;line-height:1.6;font-style:italic;">${data.message}</p>
               </div>
               ` : ''}
-              <div style="background:#fff3cd;border-radius:12px;padding:20px;margin-top:25px;border:1px solid #ffeeba;text-align:center;">
-                <p style="margin:0;font-size:14px;color:#856404;font-weight:700;">Questions about this order?</p>
-                <p style="margin:10px 0 0 0;font-size:13px;color:#856404;">
-                  Email the client at <a href="mailto:${data.email || ''}" style="color:#007bff;">${data.email || 'their email'}</a> or call them.
-                </p>
+              
+              <div style="margin-top:40px;border-top:2px solid #f0f2f5;padding-top:35px;text-align:center;">
+                <p style="font-size:10px;color:#000;margin-bottom:20px;font-weight:800;text-transform:uppercase;letter-spacing:2px;">Quick WhatsApp Actions</p>
+                <a href="https://wa.me/${data.phone || ''}?text=Hi%20${encodeURIComponent(data.name || '')}!%20Good%20news!%20Your%20order%20is%20received.%20We'll%20notify%20you%20when%20it's%20ready!" class="mobile-btn" style="background:#25d366;color:#fff;padding:18px 30px;border-radius:10px;font-weight:700;display:block;font-size:16px;margin-bottom:12px;box-shadow:0 4px 12px rgba(37,211,102,0.2);">Order Received</a>
+                <a href="https://wa.me/${data.phone || ''}?text=Hi%20${encodeURIComponent(data.name || '')}!%20Good%20news!%20Your%20order%20is%20ready.%20Total:%20GHC%20${data.totalPrice || '0'}.%20Kindly%20pay%20via%20MoMo%20to%200246503887%20(RaycoPrints).%20Pickup%20at%20Prampram-New%20V-Pub." class="mobile-btn" style="background:#ffcc00;color:#000;padding:16px 30px;border-radius:10px;font-weight:700;display:block;font-size:14px;margin-bottom:12px;">Ready for Pickup (Pay)</a>
+                <a href="https://wa.me/${data.phone || ''}?text=Hi%20${encodeURIComponent(data.name || '')}!%20Payment%20of%20GHC%20${data.totalPrice || '0'}%20Received.%20Thank%20you!%20Your%20package%20is%20ready%20for%20pickup%20at%20Prampram-New%20V-Pub." class="mobile-btn" style="background:#007bff;color:#fff;padding:16px 30px;border-radius:10px;font-weight:700;display:block;font-size:14px;margin-bottom:25px;">Payment Received</a>
               </div>
             </td>
           </tr>
