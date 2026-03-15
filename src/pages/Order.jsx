@@ -70,7 +70,9 @@ export default function Order() {
 
     // Check if it's a photocopy service
     const isPhotocopy = formData.service?.toLowerCase().includes('photocopy') || formData.service === 'Photocopy'
-    const isPrinting = formData.service?.toLowerCase().includes('printing') || formData.service === 'Printing'
+    // Check for Photo Printing FIRST (before Printing since 'photo' contains 'printing')
+    const isPhoto = formData.service?.toLowerCase().includes('photo') || formData.service === 'Photo Printing'
+    const isPrinting = (formData.service?.toLowerCase().includes('printing') || formData.service === 'Printing') && !isPhoto
     const isPassport = formData.service === 'Passport Pictures'
     const isTshirts = formData.service?.toLowerCase().includes('t-shirts') || formData.service === 'T-Shirts and Jersey'
 
@@ -156,6 +158,25 @@ export default function Order() {
             return total.toFixed(2)
         }
 
+        // Photo Printing pricing (check before regular printing since 'photo' contains 'printing')
+        if (isPhoto && qty > 0) {
+            // Photo printing prices from Services.jsx
+            let photoPrice = 10.00 // Default 6x4 Photo
+            
+            if (formData.item?.toLowerCase().includes('a4') || formData.item?.toLowerCase().includes('photo paper a4')) {
+                photoPrice = 20.00
+            } else if (formData.item?.toLowerCase().includes('a3') || formData.item?.toLowerCase().includes('photo paper a3')) {
+                photoPrice = 30.00
+            } else if (formData.item?.toLowerCase().includes('5x7')) {
+                photoPrice = 15.00
+            } else if (formData.item?.toLowerCase().includes('6x4')) {
+                photoPrice = 10.00
+            }
+
+            const total = photoPrice * qty
+            return total.toFixed(2)
+        }
+
         // For printing: just multiply
         if (isPrinting && qty > 0) {
             const total = printingPrice * qty * pages
@@ -225,6 +246,11 @@ export default function Order() {
         // If no quantity/pages yet, show base printing price as reference
         if (isPhotocopy) {
             return printingPrice.toFixed(2)
+        }
+
+        // For photo printing, show base price
+        if (isPhoto) {
+            return '10.00' // Base price for 6x4 photo
         }
 
         return ''
@@ -668,7 +694,7 @@ ${formData.message}`
                         </div>
                     ) : (
                         /* Show item dropdown when coming from main order page */
-                        !prefillItem && (isPhotocopy || isPrinting || isSecretarial) && (
+                        !prefillItem && (isPhotocopy || isPrinting || isSecretarial || isPhoto) && (
                             <div>
                                 <label htmlFor="item" className="block text-sm font-medium text-gray-700 mb-1">
                                     Select Option
@@ -706,6 +732,14 @@ ${formData.message}`
                                             <option value="CV">CV - GHC 10.00</option>
                                             <option value="Online Application">Online Application - GHC 30.00</option>
                                             <option value="Scanning">Scanning - GHC 2.00</option>
+                                        </>
+                                    )}
+                                    {isPhoto && (
+                                        <>
+                                            <option value="Photo Paper A4">Photo Paper A4 - GHC 20.00</option>
+                                            <option value="Photo Paper A3">Photo Paper A3 - GHC 30.00</option>
+                                            <option value="5x7 Photo">5x7 Photo - GHC 15.00</option>
+                                            <option value="6x4 Photo">6x4 Photo - GHC 10.00</option>
                                         </>
                                     )}
                                 </Select>
