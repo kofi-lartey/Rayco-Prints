@@ -3,7 +3,7 @@ import { Card } from '../components/ui'
 import { useState, useEffect } from 'react'
 import HomeInstallPrompt from '../components/HomeInstallPrompt'
 
-const WHATSAPP_LINK = "https://wa.me/233246504887"
+const WHATSAPP_LINK = "https://wa.me/233530422097"
 
 const heroImages = [
     "https://images.unsplash.com/photo-1562564055-71e051d33c19?w=800&h=600&fit=crop",
@@ -113,7 +113,7 @@ const Home = () => {
 
                             <p className="text-xl text-neutral-200 mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed">
                                 Professional printing and design services that help your business stand out.
-                                From business cards to large format banners, we deliver excellence.
+                                From Secretarit Services, DTF Prints to large format banners, we deliver excellence.
                             </p>
 
                             {/* CTA Buttons */}

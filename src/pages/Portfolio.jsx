@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { Card } from '../components/ui'
 import { useState, useEffect } from 'react'
 
-const WHATSAPP_LINK = "https://wa.me/233246504887"
+const WHATSAPP_LINK = "https://wa.me/233530422097"
 
 const heroImages = [
     "https://i.pinimg.com/736x/50/de/19/50de19add962cda96db262bd785343d7.jpg",

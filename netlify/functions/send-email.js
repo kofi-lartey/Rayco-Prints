@@ -106,7 +106,7 @@ const getAdminEmailHtml = (data) => {
               <div style="margin-top:40px;border-top:2px solid #f0f2f5;padding-top:35px;text-align:center;">
                 <p style="font-size:10px;color:#000;margin-bottom:20px;font-weight:800;text-transform:uppercase;letter-spacing:2px;">Quick WhatsApp Actions</p>
                 <a href="https://wa.me/${data.phone || ''}?text=Hi%20${encodeURIComponent(data.name || '')}!%20Good%20news!%20Your%20order%20is%20received.%20We'll%20notify%20you%20when%20it's%20ready!" class="mobile-btn" style="background:#25d366;color:#fff;padding:18px 30px;border-radius:10px;font-weight:700;display:block;font-size:16px;margin-bottom:12px;box-shadow:0 4px 12px rgba(37,211,102,0.2);">Order Received</a>
-                <a href="https://wa.me/${data.phone || ''}?text=Hi%20${encodeURIComponent(data.name || '')}!%20Good%20news!%20Your%20order%20is%20ready.%20Total:%20GHC%20${data.totalPrice || '0'}.%20Kindly%20pay%20via%20MoMo%20to%200246503887%20(RaycoPrints).%20Pickup%20at%20Prampram-New%20V-Pub." class="mobile-btn" style="background:#ffcc00;color:#000;padding:16px 30px;border-radius:10px;font-weight:700;display:block;font-size:14px;margin-bottom:12px;">Ready for Pickup (Pay)</a>
+                <a href="https://wa.me/${data.phone || ''}?text=Hi%20${encodeURIComponent(data.name || '')}!%20Good%20news!%20Your%20order%20is%20ready.%20Total:%20GHC%20${data.totalPrice || '0'}.%20Kindly%20pay%20via%20MoMo%20to%200530422097%20(RAYCO%20GRAPHIX%20%26%20SEC%20SERV).%20Pickup%20at%20Prampram-New%20V-Pub." class="mobile-btn" style="background:#ffcc00;color:#000;padding:16px 30px;border-radius:10px;font-weight:700;display:block;font-size:14px;margin-bottom:12px;">Ready for Pickup (Pay)</a>
                 <a href="https://wa.me/${data.phone || ''}?text=Hi%20${encodeURIComponent(data.name || '')}!%20Payment%20of%20GHC%20${data.totalPrice || '0'}%20Received.%20Thank%20you!%20Your%20package%20is%20ready%20for%20pickup%20at%20Prampram-New%20V-Pub." class="mobile-btn" style="background:#007bff;color:#fff;padding:16px 30px;border-radius:10px;font-weight:700;display:block;font-size:14px;margin-bottom:25px;">Payment Received</a>
               </div>
             </td>
@@ -186,9 +186,17 @@ const getCustomerEmailHtml = (data) => {
               
               <div style="background:#fff3cd;border-radius:12px;padding:20px;margin-top:25px;border:1px solid #ffeeba;text-align:center;">
                 <p style="margin:0;font-size:14px;color:#856404;font-weight:700;">Payment Details</p>
-                <p style="margin:10px 0 0 0;font-size:13px;color:#856404;">
-                  Please pay via MoMo to <strong>0246503887</strong> (RaycoPrints)
+                <p style="margin:10px 0 5px 0;font-size:13px;color:#856404;">
+                  <strong>MERCHANT DETAILS</strong><br/>
+                  Name: RAYCO GRAPHIX & SEC SERV<br/>
+                  ID: 949406
                 </p>
+                <p style="margin:10px 0 5px 0;font-size:13px;color:#856404;">
+                  Please pay via MoMo to <strong>0530422097</strong>
+                </p>
+                <img src="https://res.cloudinary.com/djjgkezui/image/upload/v1773607156/IMG-20260315-WA0076_r6ynqg.jpg" 
+                     alt="Payment QR Code" 
+                     style="max-width:200px;max-height:200px;border-radius:8px;margin-top:10px;" />
               </div>
               
               <div style="background:#f8f9fa;border-radius:12px;padding:20px;margin-top:25px;border:1px solid #edf0f2;text-align:center;">
@@ -288,7 +296,7 @@ const getEmailHtml = (data) => {
               </table>
               <div style="background:#f0f7ff;border-radius:12px;padding:20px;margin-top:25px;border:1px solid #cce5ff;text-align:left;">
                 <p style="margin:0;font-size:11px;color:#004085;font-weight:700;text-transform:uppercase;">Payment and Billing</p>
-                <p style="margin:5px 0 0 0;font-size:14px;color:#004085;"><strong>MoMo:</strong> 0246503887 (RaycoPrints)</p>
+                <p style="margin:5px 0 0 0;font-size:14px;color:#004085;"><strong>MoMo:</strong> 0530422097 (RAYCO GRAPHIX & SEC SERV)</p>
               </div>
               ${data.fileUrl ? `
               <div style="background:#f8f9fa;border-radius:12px;padding:20px;margin-top:25px;border:1px solid #edf0f2;text-align:center;">
@@ -327,7 +335,7 @@ const getEmailHtml = (data) => {
               </div>
               <div style="margin-top:40px;border-top:2px solid #f0f2f5;padding-top:35px;text-align:center;">
                 <p style="font-size:10px;color:#000;margin-bottom:20px;font-weight:800;text-transform:uppercase;letter-spacing:2px;">One-Tap WhatsApp Updates</p>
-                <a href="https://wa.me/${data.phone || ''}?text=Hi%20${encodeURIComponent(data.name || '')}!%20Good%20news!%20Your%20order%20is%20ready.%20Total:%20GHC%20${data.totalPrice || '0'}.%20Kindly%20pay%20via%20MoMo%20to%200246503887%20(RaycoPrints).%20Pickup%20at%20Prampram-New%20V-Pub." class="mobile-btn" style="background:#25d366;color:#fff;padding:18px 30px;border-radius:10px;font-weight:700;display:block;font-size:16px;margin-bottom:12px;box-shadow:0 4px 12px rgba(37,211,102,0.2);">Ready for Pickup (Pay)</a>
+                <a href="https://wa.me/${data.phone || ''}?text=Hi%20${encodeURIComponent(data.name || '')}!%20Good%20news!%20Your%20order%20is%20ready.%20Total:%20GHC%20${data.totalPrice || '0'}.%20Kindly%20pay%20via%20MoMo%20to%200530422097%20(RAYCO%20GRAPHIX%20%26%20SEC%20SERV).%20Pickup%20at%20Prampram-New%20V-Pub." class="mobile-btn" style="background:#25d366;color:#fff;padding:18px 30px;border-radius:10px;font-weight:700;display:block;font-size:16px;margin-bottom:12px;box-shadow:0 4px 12px rgba(37,211,102,0.2);">Ready for Pickup (Pay)</a>
                 <a href="https://wa.me/${data.phone || ''}?text=Hi%20${encodeURIComponent(data.name || '')}!%20Payment%20of%20GHC%20${data.totalPrice || '0'}%20Received.%20Thank%20you!%20Your%20package%20is%20at%20Prampram-New%20V-Pub." class="mobile-btn" style="background:#ffcc00;color:#000;padding:16px 30px;border-radius:10px;font-weight:700;display:block;font-size:14px;margin-bottom:25px;">Payment Received</a>
               </div>
             </td>
@@ -411,8 +419,8 @@ const getContactEmailHtml = (data) => {
               <div style="background:#e3f2fd;border-radius:12px;padding:20px;margin-top:25px;border:1px solid #bbdefb;text-align:center;">
                 <p style="margin:0;font-size:14px;color:#1565c0;font-weight:700;">Need immediate assistance?</p>
                 <p style="margin:10px 0 0 0;font-size:13px;color:#1565c0;">
-                  Call us: <a href="tel:+233246504887" style="color:#007bff;font-weight:700;">+233 24 650 4887</a> or 
-                  <a href="https://wa.me/233246504887" style="color:#25d366;font-weight:700;">WhatsApp</a>
+                  Call us: <a href="tel:+233530422097" style="color:#007bff;font-weight:700;">+233 53 042 2097</a> or 
+                  <a href="https://wa.me/233530422097" style="color:#25d366;font-weight:700;">WhatsApp</a>
                 </p>
               </div>
             </td>

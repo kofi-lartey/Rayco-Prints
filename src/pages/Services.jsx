@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Card } from '../components/ui'
 
-const WHATSAPP_LINK = "https://wa.me/233246504887"
+const WHATSAPP_LINK = "https://wa.me/233530422097"
 
 const heroImages = [
   "https://images.unsplash.com/photo-1562564055-71e051d33c19?w=1200&h=800&fit=crop",
@@ -186,7 +186,7 @@ const Services = () => {
 
   const handleWhatsAppClick = (service) => {
     const message = `Hi Rayco Graphix, I'm interested in ${service.title}. Can you give me a quote?`
-    window.open(`https://wa.me/233246504887?text=${encodeURIComponent(message)}`, '_blank')
+    window.open(`https://wa.me/233530422097?text=${encodeURIComponent(message)}`, '_blank')
   }
 
   return (

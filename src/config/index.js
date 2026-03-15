@@ -15,8 +15,8 @@ export const CONFIG = {
 
     // Contact Information
     contact: {
-        phone: '+233 24 650 4887',
-        whatsapp: 'https://wa.me/233246504887',
+        phone: '+233 53 042 2097',
+        whatsapp: 'https://wa.me/233530422097',
         email: 'raycographics@gmail.com',
         address: 'Prampram - V-PUB, Ghana',
         location: {
@@ -30,7 +30,7 @@ export const CONFIG = {
 
     // Social Links
     social: {
-        whatsapp: 'https://wa.me/233246504887',
+        whatsapp: 'https://wa.me/233530422097',
         email: 'raycoprints@gmail.com'
     },
 

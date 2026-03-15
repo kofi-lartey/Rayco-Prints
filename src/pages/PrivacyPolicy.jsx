@@ -152,7 +152,7 @@ const PrivacyPolicy = () => {
                                 <p><strong>Rayco Graphics</strong></p>
                                 <p>Prampram - V-PUB, Ghana</p>
                                 <p>Email: raycographics@gmail.com</p>
-                                <p>Phone: +233 24 650 4887</p>
+                                <p>Phone: +233 53 042 2097</p>
                             </div>
                         </section>
                     </div>
